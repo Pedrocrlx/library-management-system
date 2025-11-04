@@ -1,0 +1,9 @@
+service:
+  app:
+    context: .
+    dockerfile: ops/Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    command: uvicorn src.main:app --host
