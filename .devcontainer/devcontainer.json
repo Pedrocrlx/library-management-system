@@ -5,18 +5,32 @@
 	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
 	"image": "mcr.microsoft.com/devcontainers/python:2-3.12-bullseye",
 	"features": {
-		"ghcr.io/devcontainers-extra/features/poetry:2": {}
-	}
+		"ghcr.io/devcontainers-extra/features/poetry:2": {
+			"version": "latest"
+		},
+		"ghcr.io/devcontainers/features/docker-in-docker:2": {
+			"moby": true,
+			"azureDnsAutoDetection": true,
+			"installDockerBuildx": true,
+			"installDockerComposeSwitch": true,
+			"version": "latest",
+			"dockerDashComposeVersion": "v2"
+		}
+	},
 
+	"remoteEnv": {
+        "LOCAL_WORKSPACE_FOLDER": "${localWorkspaceFolder}",
+        "POETRY_VIRTUALENVS_IN_PROJECT":"true"
+    }
+    
 	// Features to add to the dev container. More info: https://containers.dev/features.
 	// "features": {},
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
-	// "forwardPorts": [],
-
-	// Use 'postCreateCommand' to run commands after the container is created.
-	// "postCreateCommand": "pip3 install --user -r requirements.txt",
-
+		
+	
+		// Use 'postCreateCommand' to run commands after the container is created.
+	
 	// Configure tool-specific properties.
 	// "customizations": {},
 
