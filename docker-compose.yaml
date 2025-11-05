@@ -1,9 +1,43 @@
 services:
+  database:
+    image: postgres:17
+    restart: always
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - ./initdb.d:/docker-entrypoint-initdb.d
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: db
+    networks:
+      - database_network
   app:
     build:
       context: .
       dockerfile: ops/Dockerfile
     ports:
-      - "8000:8000"
+      - 8000:8000
     volumes:
       - .:/app
+    depends_on:
+      - database
+
+  adminer:
+    image: adminer
+    restart: always
+    links:
+      - database:db
+    ports:
+      - 5433:8080
+    networks:
+      - database_network
+    depends_on:
+      - database
+    
+networks:
+  database_network:
+    driver: bridge
+
+volumes:
+  db_data:
+        
