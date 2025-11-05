@@ -18,6 +18,8 @@
 		}
 	},
 
+	"postCreateCommand": "poetry install --no-root",
+	
 	"remoteEnv": {
         "LOCAL_WORKSPACE_FOLDER": "${localWorkspaceFolder}",
         "POETRY_VIRTUALENVS_IN_PROJECT":"true"
