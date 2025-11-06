@@ -4,10 +4,6 @@ RUN pip install poetry
 
 WORKDIR /app
 
-COPY requirements.txt .
-
-RUN pip install --no-cache-dir -r requirements.txt
-
 COPY pyproject.toml poetry.lock ./
 
 RUN poetry config virtualenvs.create true &&\
@@ -16,8 +12,6 @@ RUN poetry config virtualenvs.create true &&\
 
 COPY . .
 
-ENV PATH="/workspace/.venv/bin:$PATH" 
-
 EXPOSE 8000
 
-CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+CMD ["poetry", "run", "uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
