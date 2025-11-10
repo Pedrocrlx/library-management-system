@@ -22,11 +22,11 @@ clean: ## Stop and remove all containers and volumes
 createsuperuser: ## Create a superuser
 	poetry run python django-app/manage.py createsuperuser
 
-migrate: ## Apply database migrations
-	poetry run python django-app/manage.py migrate
-
 migrations: ## Create new database migrations
 	poetry run python django-app/manage.py makemigrations
+
+migrate: ## Apply database migrations
+	poetry run python django-app/manage.py migrate
 
 prune: ## Delete all containers
 	docker system prune -a

@@ -4,7 +4,7 @@ RUN pip install poetry
 
 WORKDIR /app
 
-COPY pyproject.toml poetry.lock ./
+COPY pyproject.toml poetry.lock /app/
 
 RUN poetry config virtualenvs.create true &&\
     poetry config virtualenvs.in-project true &&\
@@ -14,4 +14,4 @@ COPY . .
 
 EXPOSE 8000
 
-CMD ["poetry", "run", "uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+CMD ["poetry", "run", "python", "django-app/manage.py", "runserver", "0.0.0.0:8000"]
