@@ -21,6 +21,8 @@ services:
       - .:/app
     depends_on:
       - database
+    networks:
+      - database_network
 
   adminer:
     image: adminer
