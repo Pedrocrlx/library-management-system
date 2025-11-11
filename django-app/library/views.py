@@ -1,5 +1,5 @@
 from django.shortcuts import redirect, render
-from .forms import AdminLoginForm, BookListForm
+from .forms import AdminLoginForm
 from .models import Books
 from django.contrib.auth import authenticate, login
 from django.contrib import messages
@@ -29,26 +29,16 @@ def admin_login(request):
 
 
 def book_list(request):
-    books = Books.objects.all()
-    form = BookListForm(request.GET)
     
-    if form.is_valid():
-        # Get form data
-        title = form.cleaned_data.get('title')
-        author = form.cleaned_data.get('author')
-        categories = form.cleaned_data.get('categories')
-        
-        # Apply filters if provided
-        if title:
-            books = books.filter(book_name__icontains=title)
-        if author:
-            books = books.filter(author__icontains=author)
-        if categories:
-            books = books.filter(
-                categoriesperbook__category_id__category_name__icontains=categories
-            )
+    books = Books.objects.all()
+    title = request.GET.get('title')
+    author = request.GET.get('author')
+
+    if title:
+        books = books.filter(book_name__icontains=title)
+    if author:
+        books = books.filter(author__icontains=author)
 
     return render(request, 'book-list.html', {
         'books': books,
-        'form': form,
     })
