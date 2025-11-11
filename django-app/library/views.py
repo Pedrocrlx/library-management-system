@@ -1,11 +1,9 @@
 from django.shortcuts import redirect, render
 from .forms import AdminLoginForm
-from .models import Books
 from django.contrib.auth import authenticate, login
 from django.contrib import messages
 
 # Create your views here.
-
 
 def admin_login(request):
     if request.method == 'POST':
@@ -25,20 +23,4 @@ def admin_login(request):
 
     return render(request, 'admin-login.html', {
         'form': form,
-    })
-
-
-def book_list(request):
-    
-    books = Books.objects.all()
-    title = request.GET.get('title')
-    author = request.GET.get('author')
-
-    if title:
-        books = books.filter(book_name__icontains=title)
-    if author:
-        books = books.filter(author__icontains=author)
-
-    return render(request, 'book-list.html', {
-        'books': books,
     })
