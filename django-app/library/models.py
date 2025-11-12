@@ -19,6 +19,7 @@ class Books(models.Model):
     thumbnail = models.URLField(null=True, blank=True)
     quantity = models.PositiveIntegerField(default=1)  
 
+    
     def __str__(self):
         return f"{self.book_name} by {self.author} ({self.quantity} available)"
 
