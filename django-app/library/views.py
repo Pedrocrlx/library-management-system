@@ -44,8 +44,82 @@ def user_login(request):
     })
 
 def index(request):
-    books = Books.objects.all()
-    return render(request, 'index.html', {'books': books})
+    books = [
+        {
+            "title": "The Great Gatsby",
+            "authors": "F. Scott Fitzgerald",
+            "thumbnail": "https://covers.openlibrary.org/b/id/7222246-L.jpg",
+            "categories": ["Classic", "Fiction"],
+        },
+        {
+            "title": "Atomic Habits",
+            "authors": "James Clear",
+            "thumbnail": "https://covers.openlibrary.org/b/id/9259256-L.jpg",
+            "categories": ["Self-help", "Productivity"],
+        },
+        {
+            "title": "Clean Code",
+            "authors": "Robert C. Martin",
+            "thumbnail": "https://covers.openlibrary.org/b/id/9644708-L.jpg",
+            "categories": ["Programming", "Software Engineering"],
+        },
+        {
+            "title": "The Pragmatic Programmer",
+            "authors": "Andrew Hunt, David Thomas",
+            "thumbnail": "https://covers.openlibrary.org/b/id/8099251-L.jpg",
+            "categories": ["Programming"],
+        },
+        {
+            "title": "The Great Gatsby",
+            "authors": "F. Scott Fitzgerald",
+            "thumbnail": "https://covers.openlibrary.org/b/id/7222246-L.jpg",
+            "categories": ["Classic", "Fiction"],
+        },
+        {
+            "title": "Atomic Habits",
+            "authors": "James Clear",
+            "thumbnail": "https://covers.openlibrary.org/b/id/9259256-L.jpg",
+            "categories": ["Self-help", "Productivity"],
+        },
+        {
+            "title": "Clean Code",
+            "authors": "Robert C. Martin",
+            "thumbnail": "https://covers.openlibrary.org/b/id/9644708-L.jpg",
+            "categories": ["Programming", "Software Engineering"],
+        },
+        {
+            "title": "The Pragmatic Programmer",
+            "authors": "Andrew Hunt, David Thomas",
+            "thumbnail": "https://covers.openlibrary.org/b/id/8099251-L.jpg",
+            "categories": ["Programming"],
+        },
+        {
+            "title": "The Great Gatsby",
+            "authors": "F. Scott Fitzgerald",
+            "thumbnail": "https://covers.openlibrary.org/b/id/7222246-L.jpg",
+            "categories": ["Classic", "Fiction"],
+        },
+        {
+            "title": "Atomic Habits",
+            "authors": "James Clear",
+            "thumbnail": "https://covers.openlibrary.org/b/id/9259256-L.jpg",
+            "categories": ["Self-help", "Productivity"],
+        },
+        {
+            "title": "Clean Code",
+            "authors": "Robert C. Martin",
+            "thumbnail": "https://covers.openlibrary.org/b/id/9644708-L.jpg",
+            "categories": ["Programming", "Software Engineering"],
+        },
+        {
+            "title": "The Pragmatic Programmer",
+            "authors": "Andrew Hunt, David Thomas",
+            "thumbnail": "https://covers.openlibrary.org/b/id/8099251-L.jpg",
+            "categories": ["Programming"],
+        }, 
+    ]
+
+    return render(request, "index.html", {"books": books})
 
 
 def logout_admin(request):

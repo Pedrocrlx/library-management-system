@@ -1,15 +1,89 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Library - Books</title>
+    <title>📚 Library - Books</title>
+
+    <!-- Tailwind CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+      body {
+        background: linear-gradient(to bottom right, #0f172a, #1e293b);
+      }
+      .fade-in {
+        animation: fadeIn 0.4s ease forwards;
+      }
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+    </style>
 </head>
-<body>
-    <h1>📚 Library Books</h1>
-    
-    <div class="book-list">
-       
-    </div>
+
+<body class="text-white min-h-screen flex flex-col items-center font-sans">
+
+  <!-- Header -->
+  <header class="w-full text-center py-10">
+    <h1 class="text-4xl md:text-5xl font-bold mb-2">📚 Library Books</h1>
+    <p class="text-slate-400">Explore a world of stories and knowledge</p>
+  </header>
+
+  <!-- Search Bar -->
+  <form method="get" action="{% url 'index' %}" class="w-11/12 md:w-2/3 lg:w-1/2 flex items-center mt-6 mb-10">
+    <input
+      type="text"
+      name="q"
+      placeholder="Search for a book or category..."
+      value="{{ request.GET.q }}"
+      class="w-full px-4 py-3 rounded-l-2xl bg-slate-800 text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-400 transition-all duration-200"
+    />
+    <button
+      type="submit"
+      class="px-6 py-3 rounded-r-2xl bg-cyan-500 hover:bg-cyan-400 text-slate-900 font-semibold transition-all duration-200"
+    >
+      Search
+    </button>
+  </form>
+
+  <!-- Feed -->
+  <section class="w-11/12 md:w-5/6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 fade-in">
+    {% for book in books %}
+      <div class="bg-slate-800 rounded-2xl shadow-lg hover:shadow-cyan-500/20 transition-all duration-300 overflow-hidden flex flex-col">
+        {% if book.thumbnail %}
+          <img src="{{ book.thumbnail }}" alt="{{ book.title }}" class="h-64 w-full object-cover">
+        {% else %}
+          <div class="h-64 w-full bg-slate-700 flex items-center justify-center text-4xl text-slate-500">📘</div>
+        {% endif %}
+
+        <div class="p-5 flex flex-col justify-between flex-1">
+          <div>
+            <h2 class="text-lg font-semibold line-clamp-2">{{ book.title }}</h2>
+            {% if book.authors %}
+              <p class="text-slate-400 text-sm mt-1">{{ book.authors }}</p>
+            {% endif %}
+          </div>
+
+          <div class="mt-4 space-x-2">
+            {% for category in book.categories %}
+              <span class="inline-block bg-cyan-500/20 text-cyan-300 text-xs px-3 py-1 rounded-full">
+                {{ category }}
+              </span>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    {% empty %}
+      <p class="col-span-full text-center text-slate-500">No books found 😕</p>
+    {% endfor %}
+  </section>
+
+  <!-- Footer -->
+  <footer class="mt-12 mb-8 text-slate-500 text-sm">
+    Showing {{ books|length }} books
+  </footer>
+
 </body>
 </html>
