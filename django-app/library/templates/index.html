@@ -78,6 +78,7 @@
     {% empty %}
       <p class="col-span-full text-center text-slate-500">No books found 😕</p>
     {% endfor %}
+    <button><a href="{% url 'auth_register' %}">Register</a></button>
   </section>
 
   <!-- Footer -->

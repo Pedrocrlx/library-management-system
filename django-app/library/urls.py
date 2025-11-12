@@ -1,9 +1,9 @@
 from django.urls import path
-from .views import login_admin, logout_admin, index, books_list
+from .views import index, user_register, books_list
 
 urlpatterns = [
-    path("login_admin/", login_admin, name="admin_login"),
-    path("logout_admin/", logout_admin, name="logout_admin"),
+    path("auth/register", user_register, name="auth_register"),
+    #path("auth/login", user_login, name="auth_login"),
     path("", index, name="index"),
     path("library/books", books_list, name="list_books"),
 ]

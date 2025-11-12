@@ -1,47 +1,55 @@
+from urllib import request
 from django.shortcuts import redirect, render
-from .forms import AdminLoginForm, UserLoginForm
+from .forms import UserLoginForm, UserRegisterForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
-from .models import Books
+from .models import Books, Users
 
 # Create your views here.
 
-def login_admin(request):
+# User Registration View
+def user_register(request):
     if request.method == 'POST':
-        form = AdminLoginForm(request.POST)
+        form = UserRegisterForm(request.POST)
+        if form.is_valid():
+            if Users.objects.filter(email=form.cleaned_data['email']).exists():
+                messages.error(request, "Email already registered.")
+            else:
+                form.save()
+                messages.success(request, "Registration successful.")
+
+                return redirect('index')
+    else:
+        form = UserRegisterForm()
+    
+    return render(request, 'user-register.html', {
+        'form': form,
+    })
+
+# User Login View
+def user_login(request):
+
+    if request.method == 'GET':
+        form = UserLoginForm(request.GET)
         if form.is_valid():
             username = form.cleaned_data['username']
             password = form.cleaned_data['password']
 
             user = authenticate(request, username=username, password=password)
-            if user is not None and user.is_staff:
+            if user is not None:
                 login(request, user)
-                return redirect('admin-dashboard')
+                return redirect('index')
             else:
-                messages.error(request, "Invalid credentials or not an admin.")
-    else:
-        form = AdminLoginForm()
-
-    return render(request, 'admin-dashboard.html', {
-        'form': form,
-    })
-
-def user_login(request):
-    if request.method == 'POST':
-        form = UserLoginForm(request.POST)
-        if form.is_valid():
-            name = form.cleaned_data['name']
-            password = form.cleaned_data['password']
-            email = form.cleaned_data['email']
-
-            user = authenticate(request, name=name, password=password, email=email)
-            login(request, user)
+                messages.error(request, "Invalid credentials.")
     else:
         form = UserLoginForm()
-    
-    return render(request, 'index.html', {
+
+    return render(request, 'user-login.html', {
         'form': form,
     })
+def logout_user(request):
+    logout(request)
+    return redirect('index')
 
 def index(request):
     books = [
@@ -130,6 +138,3 @@ def books_list(request):
 
 
 
-def logout_admin(request):
-    logout(request)
-    return redirect('index')
