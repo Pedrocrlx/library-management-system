@@ -79,3 +79,8 @@ Example:
 ```bash
 git switch -c feature/list-books
 ```
+
+### How to run the project 
+
+- make compose.migrate
+- make up 

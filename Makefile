@@ -28,5 +28,11 @@ migrations: ## Create new database migrations
 migrate: ## Apply database migrations
 	poetry run python django-app/manage.py migrate
 
+compose.migrations: ## Create new database migrations on service running...
+	docker compose run --rm app poetry run python django-app/manage.py makemigrations
+
+compose.migrate: compose.migrations ## Apply database migrations on service running...
+	docker compose run --rm app poetry run python django-app/manage.py migrate
+
 prune: ## Delete all containers
 	docker system prune -a
