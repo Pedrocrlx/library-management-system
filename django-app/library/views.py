@@ -120,6 +120,14 @@ def index(request):
     ]
 
     return render(request, "index.html", {"books": books})
+    books = Books.objects.filter(quantity__gt=0)  
+    return render(request, 'index.html', {'books': books})
+
+def books_list(request):
+    books = Books.objects.filter(quantity__gt=0)
+    return render(request, 'book-list.html', {'books': books})
+
+
 
 
 def logout_admin(request):

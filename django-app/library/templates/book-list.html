@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library - Books</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .book { display: flex; align-items: center; margin-bottom: 15px; }
+        .book img { width: 100px; height: auto; margin-right: 15px; }
+        .search-bar { margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+    <h1>📚 Library Books</h1>
+
+    <div class="book-list">
+        {% for book in books %}
+        <div class="book">
+            {% if book.thumbnail %}
+            <img src="{{ book.thumbnail }}" alt="{{ book.book_name }}">
+            {% else %}
+            <img src="https://via.placeholder.com/100?text=No+Image" alt="No Image">
+            {% endif %}
+            <div>
+                <strong>{{ book.book_name }}</strong><br>
+                Author: {{ book.author }}<br>
+                Quantity: {{ book.quantity }} available
+            </div>
+        </div>
+        {% empty %}
+        <p>No books found.</p>
+        {% endfor %}
+    </div>
+</body>
+</html>

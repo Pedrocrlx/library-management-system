@@ -16,9 +16,11 @@ class Users(models.Model):
 class Books(models.Model):
     book_name = models.CharField(max_length=100, null=False)
     author = models.CharField(max_length=100, null=False)
+    thumbnail = models.URLField(null=True, blank=True)
+    quantity = models.PositiveIntegerField(default=1)  
 
     def __str__(self):
-        return self.book_name
+        return f"{self.book_name} by {self.author} ({self.quantity} available)"
 
 class BooksBorrowed(models.Model):
     user_id = models.ForeignKey(Users, on_delete=models.CASCADE)
