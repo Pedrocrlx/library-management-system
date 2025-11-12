@@ -84,3 +84,7 @@ git switch -c feature/list-books
 
 - make compose.migrate
 - make up 
+
+### Load books into the running Docker Django container
+
+- make compose.load-books

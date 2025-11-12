@@ -34,5 +34,10 @@ compose.migrations: ## Create new database migrations on service running...
 compose.migrate: compose.migrations ## Apply database migrations on service running...
 	docker compose run --rm app poetry run python django-app/manage.py migrate
 
+
+compose.load-books: ## Load books into the running Docker Django container
+	@echo "📚 Loading books inside Docker container..."
+	docker compose run --rm app poetry run python django-app/manage.py load_books_data ./books.json
+
 prune: ## Delete all containers
 	docker system prune -a
