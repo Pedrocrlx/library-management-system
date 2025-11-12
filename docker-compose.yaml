@@ -5,10 +5,10 @@ services:
     volumes:
       - db_data:/var/lib/postgresql/data
       #- ./initdb.d:/docker-entrypoint-initdb.d
-    environment:
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: db
+    ports:
+      - 5432:5432
+    env_file:
+      - .env
     networks:
       - database_network
   app:
@@ -18,7 +18,9 @@ services:
     ports:
       - 8000:8000
     volumes:
-      - .:/app
+      - ./:/app/
+    env_file:
+      - .env
     depends_on:
       - database
     networks:
@@ -27,10 +29,8 @@ services:
   adminer:
     image: adminer
     restart: always
-    links:
-      - database:db
     ports:
-      - 5433:8080
+      - 8080:8080
     networks:
       - database_network
     depends_on:
