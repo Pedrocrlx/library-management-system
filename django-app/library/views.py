@@ -1,6 +1,6 @@
 from urllib import request
 from django.shortcuts import redirect, render
-from .forms import UserLoginForm, UserRegisterForm
+from .forms import AdminLoginForm, UserLoginForm, UserRegisterForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from .models import Books, Users
@@ -137,6 +137,11 @@ def books_list(request):
     books = Books.objects.filter(quantity__gt=0)
     return render(request, 'book-list.html', {'books': books})
 
+def admin_dashboard(request):
+    if request.user.is_authenticated and request.user.is_superuser == True:
+        return redirect('admin_dashboard')
+    return render(request, 'admin-dashboard.html')
 
-
-
+def admin_logout(request):
+    logout(request)
+    return redirect('admin_login')
