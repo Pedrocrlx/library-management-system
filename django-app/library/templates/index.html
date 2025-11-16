@@ -2,47 +2,62 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>📚 Library - Books</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>📚 Library - Books</title>
 
-    <!-- Tailwind CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
 
-    <style>
-      body {
-        background: linear-gradient(to bottom right, #0f172a, #1e293b);
-      }
-      .fade-in {
-        animation: fadeIn 0.4s ease forwards;
-      }
-      @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(10px); }
-        to { opacity: 1; transform: translateY(0); }
-      }
-    </style>
+  <style>
+    body {
+      background: #F5F5F7;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+    .fade-in {
+      animation: fadeIn 0.4s ease forwards;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
 </head>
 
-<body class="text-white min-h-screen flex flex-col items-center font-sans">
+<body class="min-h-screen flex flex-col items-center">
 
-  <!-- Header -->
-  <header class="w-full text-center py-10">
-    <h1 class="text-4xl md:text-5xl font-bold mb-2">📚 Library Books</h1>
-    <p class="text-slate-400">Explore a world of stories and knowledge</p>
+  <!-- Header / Top Nav -->
+  <header class="w-full flex justify-between items-center px-6 md:px-12 py-6 bg-white shadow-md rounded-b-2xl mb-8">
+    <div>
+      <h1 class="text-3xl md:text-4xl font-bold text-gray-900">📚 Library Books</h1>
+    </div>
+
+    <div class="space-x-4">
+      {% if request.session.user_id %}
+        {% if request.session.user_role == 'admin' %}
+          <a href="{% url 'admin_dashboard' %}" class="px-4 py-2 bg-cyan-500 rounded-xl text-white font-semibold hover:bg-cyan-400 transition">Dashboard</a>
+        {% else %}
+          <a href="{% url 'user_dashboard' %}" class="px-4 py-2 bg-cyan-500 rounded-xl text-white font-semibold hover:bg-cyan-400 transition">Dashboard</a>
+        {% endif %}
+      {% else %}
+        <a href="{% url 'auth_login' %}" class="px-4 py-2 bg-blue-600 rounded-xl text-white hover:bg-blue-500 transition">Login</a>
+        <a href="{% url 'auth_register' %}" class="px-4 py-2 bg-gray-200 rounded-xl text-gray-900 hover:bg-gray-300 transition">Register</a>
+      {% endif %}
+    </div>
   </header>
 
   <!-- Search Bar -->
-  <form method="get" action="{% url 'index' %}" class="w-11/12 md:w-2/3 lg:w-1/2 flex items-center mt-6 mb-10">
+  <form method="get" action="{% url 'index' %}" class="w-11/12 md:w-2/3 lg:w-1/2 flex items-center mb-10">
     <input
       type="text"
       name="q"
       placeholder="Search for a book or category..."
       value="{{ request.GET.q }}"
-      class="w-full px-4 py-3 rounded-l-2xl bg-slate-800 text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-400 transition-all duration-200"
+      class="w-full px-4 py-3 rounded-l-xl border border-gray-300 bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-400 transition-all duration-200"
     />
     <button
       type="submit"
-      class="px-6 py-3 rounded-r-2xl bg-cyan-500 hover:bg-cyan-400 text-slate-900 font-semibold transition-all duration-200"
+      class="px-6 py-3 rounded-r-xl bg-cyan-500 hover:bg-cyan-400 text-white font-semibold transition-all duration-200"
     >
       Search
     </button>
@@ -51,24 +66,24 @@
   <!-- Feed -->
   <section class="w-11/12 md:w-5/6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 fade-in">
     {% for book in books %}
-      <div class="bg-slate-800 rounded-2xl shadow-lg hover:shadow-cyan-500/20 transition-all duration-300 overflow-hidden flex flex-col">
+      <div class="bg-white rounded-2xl shadow-lg hover:shadow-cyan-200 transition-all duration-300 overflow-hidden flex flex-col">
         {% if book.thumbnail %}
           <img src="{{ book.thumbnail }}" alt="{{ book.title }}" class="h-64 w-full object-cover">
         {% else %}
-          <div class="h-64 w-full bg-slate-700 flex items-center justify-center text-4xl text-slate-500">📘</div>
+          <div class="h-64 w-full bg-gray-100 flex items-center justify-center text-4xl text-gray-400">📘</div>
         {% endif %}
 
         <div class="p-5 flex flex-col justify-between flex-1">
           <div>
-            <h2 class="text-lg font-semibold line-clamp-2">{{ book.title }}</h2>
+            <h2 class="text-lg font-semibold text-gray-900 line-clamp-2">{{ book.title }}</h2>
             {% if book.authors %}
-              <p class="text-slate-400 text-sm mt-1">{{ book.authors }}</p>
+              <p class="text-gray-500 text-sm mt-1">{{ book.authors }}</p>
             {% endif %}
           </div>
 
           <div class="mt-4 space-x-2">
             {% for category in book.categories %}
-              <span class="inline-block bg-cyan-500/20 text-cyan-300 text-xs px-3 py-1 rounded-full">
+              <span class="inline-block bg-cyan-100 text-cyan-700 text-xs px-3 py-1 rounded-full">
                 {{ category }}
               </span>
             {% endfor %}
@@ -76,13 +91,12 @@
         </div>
       </div>
     {% empty %}
-      <p class="col-span-full text-center text-slate-500">No books found 😕</p>
+      <p class="col-span-full text-center text-gray-500">No books found 😕</p>
     {% endfor %}
-    <button><a href="{% url 'auth_register' %}">Register</a></button>
   </section>
 
   <!-- Footer -->
-  <footer class="mt-12 mb-8 text-slate-500 text-sm">
+  <footer class="mt-12 mb-8 text-gray-500 text-sm">
     Showing {{ books|length }} books
   </footer>
 

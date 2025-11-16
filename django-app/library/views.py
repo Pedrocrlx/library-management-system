@@ -1,150 +1,159 @@
-from urllib import request
 from django.shortcuts import redirect, render
-from .forms import UserLoginForm, UserRegisterForm
-from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
-from .models import Books, Users
+from django.db.models import Q #coisa boa
+from django.contrib.auth.hashers import check_password
+from .forms import UserLoginForm, UserRegisterForm
+from .models import Books, Users, BooksBorrowed
 
-# Create your views here.
 
-# User Registration View
+# ------------------------------
+# USER REGISTRATION
+# ------------------------------
 def user_register(request):
     if request.method == 'POST':
         form = UserRegisterForm(request.POST)
+        
         if form.is_valid():
+            # Check email exists
             if Users.objects.filter(email=form.cleaned_data['email']).exists():
                 messages.error(request, "Email already registered.")
             else:
-                user = form.save()
-                messages.success(request, f"Registration successful. User ID: {user.id}")
-                return redirect('index')
+                user = form.save()  
+                messages.success(request, f"Registration successful! Welcome, {user.name}.")
+                return redirect('auth_login')
         else:
-            # Form validation failed - errors will be displayed in template
             for field, errors in form.errors.items():
                 for error in errors:
                     messages.error(request, f"{field}: {error}")
     else:
         form = UserRegisterForm()
-    
-    return render(request, 'user-register.html', {
-        'form': form,
-    })
-# User Login View
+
+    return render(request, 'user-register.html', {'form': form})
+
+
+
+# ------------------------------
+# USER LOGIN
+# ------------------------------
 def user_login(request):
 
-    if request.method == 'GET':
-        form = UserLoginForm(request.GET)
-        if form.is_valid():
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password']
+    if request.method == "POST":
+        form = UserLoginForm(request.POST)
 
-            user = authenticate(request, username=username, password=password)
-            if user is not None:
-                login(request, user)
-                return redirect('index')
+        if form.is_valid():
+            name = form.cleaned_data["name"]
+            password = form.cleaned_data["password"]
+
+            try:
+                user = Users.objects.get(name=name)
+            except Users.DoesNotExist:
+                messages.error(request, "User not found.")
+                return render(request, "user-login.html", {"form": form})
+
+
+            if check_password(password, user.password):
+
+                request.session["user_id"] = user.id
+                request.session["user_name"] = user.name
+                request.session["user_role"] = user.role  
+
+                # Redirect by role
+                if user.role == "admin":
+                    return redirect("admin_dashboard")
+                else:
+                    return redirect("index")
+
             else:
-                messages.error(request, "Invalid credentials.")
+                messages.error(request, "Incorrect password.")
+
     else:
         form = UserLoginForm()
 
-    return render(request, 'user-login.html', {
-        'form': form,
-    })
+    return render(request, "user-login.html", {"form": form})
+
+
+
+# ------------------------------
+# LOGOUT
+# ------------------------------
 def logout_user(request):
-    logout(request)
+    request.session.flush()  
     return redirect('index')
 
-def index(request):
-    books = [
-        {
-            "title": "The Great Gatsby",
-            "authors": "F. Scott Fitzgerald",
-            "thumbnail": "https://covers.openlibrary.org/b/id/7222246-L.jpg",
-            "categories": ["Classic", "Fiction"],
-        },
-        {
-            "title": "Atomic Habits",
-            "authors": "James Clear",
-            "thumbnail": "https://covers.openlibrary.org/b/id/9259256-L.jpg",
-            "categories": ["Self-help", "Productivity"],
-        },
-        {
-            "title": "Clean Code",
-            "authors": "Robert C. Martin",
-            "thumbnail": "https://covers.openlibrary.org/b/id/9644708-L.jpg",
-            "categories": ["Programming", "Software Engineering"],
-        },
-        {
-            "title": "The Pragmatic Programmer",
-            "authors": "Andrew Hunt, David Thomas",
-            "thumbnail": "https://covers.openlibrary.org/b/id/8099251-L.jpg",
-            "categories": ["Programming"],
-        },
-        {
-            "title": "The Great Gatsby",
-            "authors": "F. Scott Fitzgerald",
-            "thumbnail": "https://covers.openlibrary.org/b/id/7222246-L.jpg",
-            "categories": ["Classic", "Fiction"],
-        },
-        {
-            "title": "Atomic Habits",
-            "authors": "James Clear",
-            "thumbnail": "https://covers.openlibrary.org/b/id/9259256-L.jpg",
-            "categories": ["Self-help", "Productivity"],
-        },
-        {
-            "title": "Clean Code",
-            "authors": "Robert C. Martin",
-            "thumbnail": "https://covers.openlibrary.org/b/id/9644708-L.jpg",
-            "categories": ["Programming", "Software Engineering"],
-        },
-        {
-            "title": "The Pragmatic Programmer",
-            "authors": "Andrew Hunt, David Thomas",
-            "thumbnail": "https://covers.openlibrary.org/b/id/8099251-L.jpg",
-            "categories": ["Programming"],
-        },
-        {
-            "title": "The Great Gatsby",
-            "authors": "F. Scott Fitzgerald",
-            "thumbnail": "https://covers.openlibrary.org/b/id/7222246-L.jpg",
-            "categories": ["Classic", "Fiction"],
-        },
-        {
-            "title": "Atomic Habits",
-            "authors": "James Clear",
-            "thumbnail": "https://covers.openlibrary.org/b/id/9259256-L.jpg",
-            "categories": ["Self-help", "Productivity"],
-        },
-        {
-            "title": "Clean Code",
-            "authors": "Robert C. Martin",
-            "thumbnail": "https://covers.openlibrary.org/b/id/9644708-L.jpg",
-            "categories": ["Programming", "Software Engineering"],
-        },
-        {
-            "title": "The Pragmatic Programmer",
-            "authors": "Andrew Hunt, David Thomas",
-            "thumbnail": "https://covers.openlibrary.org/b/id/8099251-L.jpg",
-            "categories": ["Programming"],
-        }, 
-    ]
 
-    query = request.GET.get("q", "").lower()
+# ------------------------------
+# HOMEPAGE FEED (WITH SEARCH FROM DB)
+# ------------------------------
+def index(request):
+    query = request.GET.get("q", "").strip()
+
+    # Get books with quantity > 0
+    books_qs = Books.objects.filter(quantity__gt=0).prefetch_related('categoriesperbook_set__category_id')
+
+    # Search filter
     if query:
-        books = [b for b in books if query in b["title"].lower() or query in b["authors"].lower()]
+        books_qs = books_qs.filter(
+            Q(book_name__icontains=query) | 
+            Q(author__icontains=query) |
+            Q(categoriesperbook__category_id__category_name__icontains=query)
+        ).distinct()
+
+    # Prepare data for template
+    books = []
+    for book in books_qs:
+        books.append({
+            "title": book.book_name,
+            "authors": book.author,
+            "thumbnail": book.thumbnail,
+            "categories": [c.category_id.category_name for c in book.categoriesperbook_set.all()]
+        })
 
     return render(request, "index.html", {"books": books})
 
-def books_list(request):
-    books = Books.objects.filter(quantity__gt=0)
-    return render(request, 'book-list.html', {'books': books})
+# ------------------------------
+# USER DASHBOARD
+# ------------------------------
+def user_dashboard(request):
+    user_id = request.session.get("user_id")
+    role = request.session.get("user_role")
 
+    # Block non-logged in or admin users
+    if not user_id or role == "admin":
+        return redirect("index")
+
+    user = Users.objects.get(id=user_id)
+
+    # Fetch books borrowed by this user
+    borrowed_books = user.booksborrowed_set.all()
+
+    return render(request, "user-dashboard.html", {
+        "user": user,
+        "borrowed_books": borrowed_books
+    })
+
+
+# ------------------------------
+# ADMIN DASHBOARD
+# ------------------------------
 def admin_dashboard(request):
-    if request.user.is_authenticated and request.user.is_superuser == True:
-        return redirect('admin_dashboard')
-    return render(request, 'admin-dashboard.html')
+    role = request.session.get("user_role")
 
-def admin_logout(request):
-    logout(request)
-    return redirect('user_login')
+    if role != "admin":
+        return redirect("index")  # Block non-admins
+
+    # Fetch all books for management
+    books = Books.objects.all()
+
+    # Optional: fetch all borrowed books for overview
+    borrowed_books = BooksBorrowed.objects.select_related("user_id", "book_id").all()
+
+    return render(request, "admin-dashboard.html", {
+        "books": books,
+        "borrowed_books": borrowed_books
+    })
+
+
+
+def logout_user(request):
+    request.session.flush()  
+    return redirect('index')
