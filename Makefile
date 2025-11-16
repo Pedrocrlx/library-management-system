@@ -7,7 +7,7 @@ up: ## Start all services defined in compose.yml without rebuilding
 	@echo "Starting all services defined in compose.yml..."
 	docker compose up 
 	
-up-build : ## Start all services defined in compose.yml with rebuilding
+up-build: compose.createsuperuser ## Start all services defined in compose.yml with rebuilding
 	@echo "Starting all services defined in compose.yml with rebuilding..."
 	docker compose up --build
 
@@ -34,6 +34,8 @@ compose.migrations: ## Create new database migrations on service running...
 compose.migrate: compose.migrations ## Apply database migrations on service running...
 	docker compose run --rm app poetry run python django-app/manage.py migrate
 
+compose.createsuperuser: ## Create a superuser on service running...
+	docker compose run --rm app poetry run python django-app/manage.py createsuperuser
 
 compose.load-books: ## Load books into the running Docker Django container
 	@echo "📚 Loading books inside Docker container..."

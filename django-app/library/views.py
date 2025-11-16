@@ -15,17 +15,20 @@ def user_register(request):
             if Users.objects.filter(email=form.cleaned_data['email']).exists():
                 messages.error(request, "Email already registered.")
             else:
-                form.save()
-                messages.success(request, "Registration successful.")
-
+                user = form.save()
+                messages.success(request, f"Registration successful. User ID: {user.id}")
                 return redirect('index')
+        else:
+            # Form validation failed - errors will be displayed in template
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f"{field}: {error}")
     else:
         form = UserRegisterForm()
     
     return render(request, 'user-register.html', {
         'form': form,
     })
-
 # User Login View
 def user_login(request):
 
@@ -137,6 +140,11 @@ def books_list(request):
     books = Books.objects.filter(quantity__gt=0)
     return render(request, 'book-list.html', {'books': books})
 
+def admin_dashboard(request):
+    if request.user.is_authenticated and request.user.is_superuser == True:
+        return redirect('admin_dashboard')
+    return render(request, 'admin-dashboard.html')
 
-
-
+def admin_logout(request):
+    logout(request)
+    return redirect('user_login')

@@ -19,7 +19,6 @@ class Books(models.Model):
     thumbnail = models.URLField(null=True, blank=True)
     quantity = models.PositiveIntegerField(default=1)  
 
-    
     def __str__(self):
         return f"{self.book_name} by {self.author} ({self.quantity} available)"
 
@@ -27,7 +26,6 @@ class BooksBorrowed(models.Model):
     user_id = models.ForeignKey(Users, on_delete=models.CASCADE)
     book_id = models.ForeignKey(Books, on_delete=models.CASCADE)
     borrowed_date = models.DateField(auto_now_add=True)
-    book_state = models.CharField(null=False, max_length=12)
 
     def __str__(self):
         return f"{self.user_id.name} borrowed {self.book_id.book_name}"
