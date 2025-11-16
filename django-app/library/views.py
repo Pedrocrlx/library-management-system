@@ -127,9 +127,11 @@ def index(request):
         }, 
     ]
 
+    query = request.GET.get("q", "").lower()
+    if query:
+        books = [b for b in books if query in b["title"].lower() or query in b["authors"].lower()]
+
     return render(request, "index.html", {"books": books})
-    books = Books.objects.filter(quantity__gt=0)  
-    return render(request, 'index.html', {'books': books})
 
 def books_list(request):
     books = Books.objects.filter(quantity__gt=0)
