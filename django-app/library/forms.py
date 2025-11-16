@@ -5,7 +5,27 @@ class UserLoginForm(forms.Form):
     name = forms.CharField(label="Name", max_length=100)
     password = forms.CharField(label="Password", widget=forms.PasswordInput)
 
-class UserRegisterForm(forms.ModelForm):
+class PasswordValidationMixin:
+    """Mixin to add custom password validation to any form"""
+    def clean_password(self):
+        pwd = self.cleaned_data.get('password')
+        if not pwd:
+            raise forms.ValidationError("Password is required.")
+        if len(pwd) < 8:
+            raise forms.ValidationError(
+                "Password must be at least 8 characters long.")
+        if not any(char.isdigit() for char in pwd):
+            raise forms.ValidationError(
+                "Password must contain at least one digit.")
+        if not any(char.isalpha() for char in pwd):
+            raise forms.ValidationError(
+                "Password must contain at least one letter.")
+        if not any(char.isupper() for char in pwd):
+            raise forms.ValidationError(
+                "Password must contain at least one uppercase letter.")
+        return pwd
+
+class UserRegisterForm(PasswordValidationMixin, forms.ModelForm):
     class Meta:
         model = Users
         fields = ['name', 'password', 'email']

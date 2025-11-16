@@ -7,7 +7,7 @@ up: ## Start all services defined in compose.yml without rebuilding
 	@echo "Starting all services defined in compose.yml..."
 	docker compose up 
 	
-up-build : ## Start all services defined in compose.yml with rebuilding
+up-build: compose.createsuperuser ## Start all services defined in compose.yml with rebuilding
 	@echo "Starting all services defined in compose.yml with rebuilding..."
 	docker compose up --build
 
