@@ -1,6 +1,6 @@
 from urllib import request
 from django.shortcuts import redirect, render
-from .forms import AdminLoginForm, UserLoginForm, UserRegisterForm
+from .forms import UserLoginForm, UserRegisterForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from .models import Books, Users
@@ -144,4 +144,4 @@ def admin_dashboard(request):
 
 def admin_logout(request):
     logout(request)
-    return redirect('admin_login')
+    return redirect('user_login')
