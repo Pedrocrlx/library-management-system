@@ -22,17 +22,5 @@
 	"remoteEnv": {
 		"LOCAL_WORKSPACE_FOLDER": "${localWorkspaceFolder}",
 		"POETRY_VIRTUALENVS_IN_PROJECT":"true"
-	},
-	
-	// Stop forwarding ports automatically
-	"customizations": {
-		"vscode": {
-			"settings": {
-				"remote.autoForwardPorts": false,
-				"remote.portsAttributes": {
-					"*": { "onAutoForward": "ignore" }
-				}
-			}
-		}
 	}
 }
