@@ -1,12 +1,15 @@
 from django import forms
 from .models import Users
 
+
 class UserLoginForm(forms.Form):
     name = forms.CharField(label="Name", max_length=100)
     password = forms.CharField(label="Password", widget=forms.PasswordInput)
 
+
 class PasswordValidationMixin:
     """Mixin to add custom password validation to any form"""
+
     def clean_password(self):
         pwd = self.cleaned_data.get('password')
         if not pwd:
@@ -25,6 +28,7 @@ class PasswordValidationMixin:
                 "Password must contain at least one uppercase letter.")
         return pwd
 
+
 class UserRegisterForm(PasswordValidationMixin, forms.ModelForm):
     class Meta:
         model = Users
@@ -32,3 +36,10 @@ class UserRegisterForm(PasswordValidationMixin, forms.ModelForm):
         widgets = {
             'password': forms.PasswordInput(),
         }
+
+
+class AddBookForm(forms.Form):
+    title = forms.CharField(label="Title", max_length=100, required=True)
+    author = forms.CharField(label="Author", max_length=100, required=True)
+    thumbnail = forms.URLField(label="Thumbnail URL", max_length=200)
+    quantity = forms.IntegerField(label="Quantity", min_value=1)

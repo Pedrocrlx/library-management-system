@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import index, logout_user, user_login, user_register, admin_dashboard, user_dashboard
+from .views import index, logout_user, user_login, user_register, admin_dashboard, user_dashboard, admin_manage
 
 urlpatterns = [ 
     path("", index, name="index"),
@@ -8,4 +8,5 @@ urlpatterns = [
     path("logout", logout_user, name="logout_user"),
     path("dashboard/admin", admin_dashboard, name="admin_dashboard"),
     path("dashboard/user", user_dashboard, name="user_dashboard"),
+    path("dashboard/manage", admin_manage, name="admin_manage"),
 ]
