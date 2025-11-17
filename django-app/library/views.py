@@ -2,7 +2,7 @@ from django.shortcuts import redirect, render
 from django.contrib import messages
 from django.db.models import Q #coisa boa
 from django.contrib.auth.hashers import check_password
-from .forms import UserLoginForm, UserRegisterForm
+from .forms import UserLoginForm, UserRegisterForm, AddBookForm
 from .models import Books, Users, BooksBorrowed
 
 
@@ -152,6 +152,35 @@ def admin_dashboard(request):
         "borrowed_books": borrowed_books
     })
 
+
+def admin_manage(request):
+    role = request.session.get("user_role")
+
+    if role != "admin":
+        return redirect("index")  # Block non-admins
+
+    books = Books.objects.all()
+
+    if request.method == "POST":
+        form = AddBookForm(request.POST)
+
+        if form.is_valid():
+            Books.objects.create(
+                book_name=form.cleaned_data["title"],
+                author=form.cleaned_data["author"],
+                thumbnail=form.cleaned_data["thumbnail"],
+                quantity=form.cleaned_data["quantity"]
+            )
+            messages.success(request, "Book added successfully!")
+            return redirect("admin_manage")
+        else:
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f"{field}: {error}")
+    else:
+        form = AddBookForm()
+
+    return render(request, "admin-manage.html", {"form": form, "books": books})
 
 
 def logout_user(request):
