@@ -6,7 +6,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>User Login</title>
 
-  <!-- Tailwind CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
 
   <style>
@@ -15,14 +14,6 @@
       background: #F5F5F7;
       color: #1C1C1E;
     }
-
-    .fade {
-      animation: fadeIn 0.4s ease forwards;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
   </style>
 </head>
 
@@ -30,49 +21,36 @@
 
   <div class="w-full max-w-md bg-white rounded-3xl shadow-xl p-10 fade">
 
-    <!-- Title -->
     <h1 class="text-3xl font-bold text-center mb-6">Welcome Back</h1>
     <p class="text-center text-gray-600 mb-8">Log in to your library account!</p>
 
-    <!-- Form -->
-    <form method="post" class="space-y-6">
+    <form method="POST">
       {% csrf_token %}
 
-      {% for field in form %}
-        <div class="flex flex-col">
-          <label class="font-medium text-gray-800 mb-1">{{ field.label }}</label>
-          {{ field }}
-          {% if field.errors %}
-            <p class="text-red-600 text-sm mt-1">{{ field.errors.0 }}</p>
-          {% endif %}
-        </div>
+      <div class="flex flex-col mb-4">
+        <label class="font-medium text-gray-800 mb-1">Name</label>
+        <input type="text" name="name"
+         class="w-full px-4 py-3 rounded-xl border border-gray-300 bg-gray-50
+                focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+      </div>
 
-        <script>
-          document.addEventListener("DOMContentLoaded", () => {
-            const el = document.getElementById("id_{{ field.name }}");
-            if (el) {
-              el.classList.add(
-                "w-full", "px-4", "py-3",
-                "rounded-xl", "border", "border-gray-300",
-                "bg-gray-50", "focus:outline-none",
-                "focus:ring-2", "focus:ring-blue-500",
-                "transition"
-              );
-            }
-          });
-        </script>
-      {% endfor %}
+      <div class="flex flex-col mb-6">
+        <label class="font-medium text-gray-800 mb-1">Password</label>
+        <input type="password" name="password"
+               class="w-full px-4 py-3 rounded-xl border border-gray-300 bg-gray-50
+                      focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+      </div>
 
-      <!-- Submit -->
-      <button
-        type="submit"
-        class="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-xl shadow-md transition-all"
-      >
+      {% if error %}
+        <p class="text-red-600 text-sm mb-4 text-center">{{ error }}</p>
+      {% endif %}
+
+      <button type="submit"
+              class="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-xl shadow-md transition-all">
         Login
       </button>
     </form>
 
-    <!-- Register link -->
     <p class="text-center text-gray-600 text-sm mt-6">
       Don’t have an account?
       <a href="{% url 'auth_register' %}" class="text-blue-600 hover:underline">Create one</a>
