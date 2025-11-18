@@ -32,36 +32,33 @@
         <div class="mt-4">
             <a href="{% url 'logout_user' %}" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-xl shadow transition">Logout</a>
         </div>
+        <div class="mt-4">
+            <a href="{% url 'index' %}" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-xl shadow transition">Back</a>
+        </div>
     </header>
 
+    <p class="text-gray-600 mb-4">
+        You have borrowed {{ borrowed_count }} book{{ borrowed_count|pluralize }}.
+        You can borrow {{ remaining }} more book{{ remaining|pluralize }}.
+    </p>
+
     <!-- Borrowed Books -->
-    <section class="w-full max-w-4xl grid gap-6 md:grid-cols-2 fade-in">
+    <section class="w-full max-w-4xl grid gap-6 md:grid-cols-1 fade-in">
         {% for entry in borrowed_books %}
-            <div class="bg-white rounded-3xl shadow-md p-6 flex flex-col justify-between transition hover:shadow-lg">
-                
+            <div class="bg-white rounded-3xl shadow-md p-6 flex flex-col justify-between transition hover:shadow-lg">   
                 <!-- Book info -->
                 <div>
                     <h2 class="text-lg font-semibold mb-2">{{ entry.book_id.book_name }}</h2>
                     <p class="text-gray-500 mb-2">by {{ entry.book_id.author }}</p>
-                    <p class="text-gray-400 text-sm">Borrowed on: {{ entry.borrowed_date|date:"d-m-Y" }}</p>
+                    <span class="px-3 py-1 bg-gray-200 text-gray-700 rounded-full text-sm">{{ entry.book_id.categoriesperbook_set.first.category_id.category_name }}</span>
+                    <span class="px-3 py-1 bg-gray-200 text-gray-700 rounded-full text-sm">Borrowed on: {{ entry.borrowed_date|date:"d-m-Y" }}</span>
+                    <span class="px-3 py-1 bg-gray-200 text-gray-700 rounded-full text-sm">Due on: {{ entry.due_date|date:"d-m-Y" }}</span>       
                 </div>
-
-                <!-- Status indicator -->
-                {% comment %} Example color coding based on due date {% endcomment %}
-                {% with remaining_days=entry.due_date|date:"U"|add:"-now"|divisibleby:86400 %}
-                    {% if remaining_days > 7 %}
-                        <div class="h-1 w-full bg-green-500 rounded-full mt-4"></div>
-                    {% elif remaining_days <= 7 and remaining_days > 0 %}
-                        <div class="h-1 w-full bg-yellow-400 rounded-full mt-4"></div>
-                    {% else %}
-                        <div class="h-1 w-full bg-red-500 rounded-full mt-4"></div>
-                    {% endif %}
-                {% endwith %}
-
-                <!-- Return button -->
-                <form method="post" action="{% url 'return_book' entry.id %}" class="mt-4">
+                 <form method="post" action="{% url 'return_book' entry.id %}" class="mt-4">
                     {% csrf_token %}
-                    <button type="submit" class="w-full py-2 bg-red-500 hover:bg-red-400 text-white font-semibold rounded-xl transition">Return Book</button>
+                    <button type="submit" class="w-full py-2 bg-red-500 hover:bg-red-400 text-white font-semibold rounded-xl transition" onclick="return confirm('Tem certeza que quer devolver este livro?');">
+                    Return Book
+                    </button>
                 </form>
             </div>
         {% empty %}

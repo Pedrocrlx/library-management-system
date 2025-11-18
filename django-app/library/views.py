@@ -4,6 +4,7 @@ from django.db.models import Q #coisa boa
 from django.contrib.auth.hashers import check_password
 from .forms import UserLoginForm, UserRegisterForm, AddBookForm
 from .models import Books, Users, BooksBorrowed
+from datetime import datetime, timedelta
 
 
 # ------------------------------
@@ -71,20 +72,12 @@ def user_login(request):
 
     return render(request, "user-login.html", {"form": form})
 
-
-
-# ------------------------------
-# LOGOUT
-# ------------------------------
-def logout_user(request):
-    request.session.flush()  
-    return redirect('index')
-
-
 # ------------------------------
 # HOMEPAGE FEED (WITH SEARCH FROM DB)
 # ------------------------------
 def index(request):
+    user_id = request.session.get("user_id")
+    user_role = request.session.get("user_role")
     query = request.GET.get("q", "").strip()
 
     # Get books with quantity > 0
@@ -102,13 +95,14 @@ def index(request):
     books = []
     for book in books_qs:
         books.append({
+            "id": book.id,
             "title": book.book_name,
             "authors": book.author,
             "thumbnail": book.thumbnail,
             "categories": [c.category_id.category_name for c in book.categoriesperbook_set.all()]
         })
 
-    return render(request, "index.html", {"books": books})
+    return render(request, "index.html", {"books": books, "user_id": user_id, "user_role": user_role})
 
 # ------------------------------
 # USER DASHBOARD
@@ -117,21 +111,97 @@ def user_dashboard(request):
     user_id = request.session.get("user_id")
     role = request.session.get("user_role")
 
-    # Block non-logged in or admin users
+    # Bloquear não-logged ou admin
     if not user_id or role == "admin":
         return redirect("index")
 
     user = Users.objects.get(id=user_id)
 
-    # Fetch books borrowed by this user
-    borrowed_books = user.booksborrowed_set.all()
+    # Livros que o usuário pegou
+    borrowed_books = user.booksborrowed_set.select_related('book_id').all()
+
+    # Quantidade de livros já pegos
+    borrowed_count = borrowed_books.count()
+    max_books = 3
+    remaining = max_books - borrowed_count
 
     return render(request, "user-dashboard.html", {
         "user": user,
-        "borrowed_books": borrowed_books
+        "borrowed_books": borrowed_books,
+        "borrowed_count": borrowed_count,
+        "remaining": remaining,
+        "max_books": max_books,
     })
 
 
+def borrow_book(request, book_id):
+    user_id = request.session.get("user_id")
+    role = request.session.get("user_role")
+
+    if not user_id or role == "admin":
+        return redirect("index")
+
+    user = Users.objects.get(id=user_id)
+    book = Books.objects.get(id=book_id)
+
+    # Verificar stock
+    if book.quantity <= 0:
+        messages.error(request, "This book is out of stock.")
+        return redirect("index")
+
+    # Verificar se já pegou o mesmo livro
+    if BooksBorrowed.objects.filter(user_id=user, book_id=book).exists():
+        messages.error(request, "You already borrowed this book.")
+        return redirect("index")
+
+    # Limite máximo de livros
+    max_books = 3
+    borrowed_count = user.booksborrowed_set.count()
+    if borrowed_count >= max_books:
+        messages.error(request, f"You can only borrow up to {max_books} books at a time.")
+        return redirect("index")
+
+    # Criar borrow com limite de 2 meses
+    borrow_date = datetime.now()
+    due_date = borrow_date + timedelta(days=60)  # 2 meses aproximados
+    BooksBorrowed.objects.create(
+        user_id=user,
+        book_id=book,
+        borrow_date=borrow_date,
+        due_date=due_date
+    )
+
+    # Reduzir quantidade
+    book.quantity -= 1
+    book.save()
+
+    messages.success(request, f"You borrowed the book: {book.book_name}. It is due on {due_date.strftime('%d-%m-%Y')}.")
+    return redirect("user_dashboard")
+
+
+def return_book(request, borrow_id):
+    user_id = request.session.get("user_id")
+    role = request.session.get("user_role")
+
+    if not user_id or role == "admin":
+        return redirect("index")
+
+    try:
+        borrow_entry = BooksBorrowed.objects.get(id=borrow_id, user_id__id=user_id)
+    except BooksBorrowed.DoesNotExist:
+        messages.error(request, "Borrow entry not found.")
+        return redirect("user_dashboard")
+
+    # Increase book quantity
+    book = borrow_entry.book_id
+    book.quantity += 1
+    book.save()
+
+    # Delete borrow entry
+    borrow_entry.delete()
+
+    messages.success(request, f"You returned the book: {book.book_name}")
+    return redirect("user_dashboard")
 # ------------------------------
 # ADMIN DASHBOARD
 # ------------------------------

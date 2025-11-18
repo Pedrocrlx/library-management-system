@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.hashers import make_password 
+from datetime import datetime, timedelta
 
 # Create your models here.
 
@@ -22,10 +23,14 @@ class Books(models.Model):
     def __str__(self):
         return f"{self.book_name} by {self.author} ({self.quantity} available)"
 
+def default_due_date():
+    return datetime.now() + timedelta(days=60)
+
 class BooksBorrowed(models.Model):
     user_id = models.ForeignKey(Users, on_delete=models.CASCADE)
     book_id = models.ForeignKey(Books, on_delete=models.CASCADE)
     borrowed_date = models.DateField(auto_now_add=True)
+    due_date = models.DateTimeField(default=default_due_date)
 
     def __str__(self):
         return f"{self.user_id.name} borrowed {self.book_id.book_name}"
