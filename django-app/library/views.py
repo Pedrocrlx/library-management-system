@@ -252,6 +252,21 @@ def admin_manage(request):
 
     return render(request, "admin-manage.html", {"form": form, "books": books})
 
+def admin_delete_book(request, book_id):
+    role = request.session.get("user_role")
+
+    if role != "admin":
+        return redirect("index")  
+
+    try:
+        book = Books.objects.get(id=book_id)
+        book.delete()
+        messages.success(request, "Book deleted successfully!")
+    except Books.DoesNotExist:
+        messages.error(request, "Book not found.")
+
+    return redirect("admin_manage")
+
 
 def logout_user(request):
     request.session.flush()  
