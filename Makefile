@@ -3,39 +3,45 @@
 help:       
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
 
+## ----------------------------------------------------------------------------
+## Setup command
+## ----------------------------------------------------------------------------
+
+run: ## Setup and run the entire application stack 	
+	@echo "Setting up and running the entire application stack..."
+
+## 1- Creating migrations, applying them
+## 2- Creating admin user 
+## 3- Loading books data 
+## 4- And starting services
+	
+	docker compose run --rm app poetry run python django-app/manage.py makemigrations
+	docker compose run --rm app poetry run python django-app/manage.py migrate
+	docker compose run --rm app poetry run python django-app/manage.py shell -c "from library.models import Users; \ 	Users.objects.create(name='admin', email='admin@example.com', password='Admin123', role='admin'); Users.objects.create(name='Bruno', email='bruno@gmail.com', role='user') \ 	print('Admin user created successfully.')"
+	docker compose run --rm app poetry run python django-app/manage.py load_books_data ./books.json
+	docker compose up --build --force-recreate  
+
+## ----------------------------------------------------------------------------
+## Docker compose commands  
+## ---------------------------------------------------------------------------- 
+
 up: ## Start all services defined in compose.yml without rebuilding
 	@echo "Starting all services defined in compose.yml..."
 	docker compose up 
 	
+up-build: ## 2 - Start all services defined in compose.yml with rebuilding and creating superuser
+	@echo "Starting all services defined in compose.yml with rebuilding..."
+	docker compose up --build --force-recreate
+
 down: ## Stop and remove all containers
 	@echo "Stopping and removing all containers..."
 	docker compose down
-
+	
 clean: ## Stop and remove all containers and volumes
 	@echo "Stopping and removing all containers and volumes..."
 	docker compose down --volumes
+	docker system prune -a
 	
-migrations: ## Create new database migrations
-	poetry run python django-app/manage.py makemigrations
-
-migrate: ## Apply database migrations
-	poetry run python django-app/manage.py migrate
-
-## ----------------------------------------------------------------------------
-## Setup commands before starting the services
-## ----------------------------------------------------------------------------
-
-compose.setup: ## 1 - Setup Docker Compose environment (migrations + migrate)
-	@$(MAKE) compose.migrate
-
-up-build: compose.createsuperuser ## 2 - Start all services defined in compose.yml with rebuilding and creating superuser
-	@echo "Starting all services defined in compose.yml with rebuilding..."
-	docker compose up --build
-
-## ----------------------------------------------------------------------------
-## Commands to run inside the running Docker container
-## ----------------------------------------------------------------------------
-
 compose.migrations: ## Create new database migrations on service running...
 	docker compose run --rm app poetry run python django-app/manage.py makemigrations
 
@@ -52,13 +58,6 @@ createadmin:
 	Users.objects.create(name='admin', email='admin@example.com', password='Admin123', role='admin'); \
 	print('Admin user created successfully.')"
 
-compose.createusers: ## Create admin user on service running...
-	docker compose run --rm app poetry run python django-app/create_userAdmin.py
-
 compose.load-books: ## Load books into the running Docker Django container
 	@echo "📚 Loading books inside Docker container..."
 	docker compose run --rm app poetry run python django-app/manage.py load_books_data ./books.json
-## ----------------------------------------------------------------------------
-
-prune: ## Delete all containers
-	docker system prune -a
