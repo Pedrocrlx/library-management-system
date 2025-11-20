@@ -22,7 +22,12 @@ Should resolve cache/volumes problems.
 ```bash
     poetry install --no-root
 ```
+
+if you get permissions errors after run this command:
+
+```bash
 sudo chown -R $USER /library-management-system/.venv/
+```
 
 ---
 ### 4. Check the enviroment that you are.
@@ -73,11 +78,8 @@ So, if you just have the **main** you need to pull the **dev branch** from remot
 git branch pull origin dev
 ```
 
-Then should be like this after run ```git branch```
-
 ```bash
-*dev
-main
+git switch dev
 ```
 
 After this you can create your **feature** branch **from dev**.
@@ -88,11 +90,6 @@ Example:
 git switch -c feature/list-books
 ```
 
-### How to run the project 
+### How to run the project ?
 
-- make compose.migrate
-- make up 
-
-### Load books into the running Docker Django container
-
-- make compose.load-books
+- make run
