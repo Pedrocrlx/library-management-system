@@ -17,7 +17,7 @@ run: ## Setup and run the entire application stack
 	
 	docker compose run --rm app poetry run python django-app/manage.py makemigrations
 	docker compose run --rm app poetry run python django-app/manage.py migrate
-	docker compose run --rm app poetry run python django-app/manage.py shell -c "from library.models import Users; \ 	Users.objects.create(name='admin', email='admin@example.com', password='Admin123', role='admin'); Users.objects.create(name='Bruno', email='bruno@gmail.com', role='user') \ 	print('Admin user created successfully.')"
+	docker compose run --rm app poetry run python django-app/manage.py shell -c "from library.models import Users; Users.objects.create(name='admin', email='admin@example.com', password='Admin123', role='admin'), Users.objects.create(name='Bruno', email='bruno@gmail.com', role='user'), print('Admin and Bruno created successfully.')";
 	docker compose run --rm app poetry run python django-app/manage.py load_books_data ./books.json
 	docker compose up --build --force-recreate  
 
