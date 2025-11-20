@@ -5,8 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - Midnight Library</title>
-
+    <title>Manage Books - Midnight Library</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet">
@@ -53,147 +52,114 @@
             <div class="flex items-center gap-2">
                 <div
                     class="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-600 to-fuchsia-600 flex items-center justify-center text-xl shadow-lg shadow-violet-500/20">
-                    🛡️
+                    ⚙️
                 </div>
                 <span
-                    class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400">Admin
-                    Portal</span>
+                    class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400">Manage
+                    Inventory</span>
             </div>
-            <div class="flex items-center gap-4">
-                <a href="{% url 'admin_manage' %}"
-                    class="px-4 py-2 rounded-xl bg-violet-600 hover:bg-violet-500 text-white text-sm font-medium transition-all shadow-lg shadow-violet-500/20">
-                    Manage Books
-                </a>
-                <a href="{% url 'auth_logout' %}"
-                    class="px-4 py-2 rounded-xl bg-red-500/10 text-red-400 hover:bg-red-500/20 text-sm font-medium transition-colors border border-red-500/20">
-                    Logout
-                </a>
-            </div>
+            <a href="{% url 'admin_dashboard' %}"
+                class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-sm font-medium transition-all border border-slate-700">
+                ← Back to Dashboard
+            </a>
         </div>
     </nav>
 
     <!-- Main Content -->
     <main class="flex-grow pt-32 pb-20 px-6">
-        <div class="max-w-7xl mx-auto space-y-12">
+        <div class="max-w-7xl mx-auto grid lg:grid-cols-3 gap-8">
 
-            <!-- Header -->
-            <div class="fade-in-up">
-                <h1 class="text-3xl md:text-4xl font-bold mb-2">Dashboard Overview</h1>
-                <p class="text-slate-400">Monitor library activity and inventory</p>
+            <!-- Add Book Form -->
+            <div class="lg:col-span-1">
+                <div class="glass-card rounded-2xl p-6 sticky top-32 fade-in-up">
+                    <h2 class="text-xl font-bold mb-6 flex items-center gap-2">
+                        <span class="text-violet-400">+</span> Add New Book
+                    </h2>
+                    <form method="post" class="space-y-4">
+                        {% csrf_token %}
+                        <div>
+                            <label for="id_title" class="block text-sm font-medium text-slate-300 mb-1.5">Title</label>
+                            <input type="text" name="title" id="id_title"
+                                class="w-full px-4 py-2.5 rounded-xl bg-slate-900/50 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500/50 focus:border-violet-500 transition-all"
+                                placeholder="Book Title" required>
+                        </div>
+                        <div>
+                            <label for="id_author"
+                                class="block text-sm font-medium text-slate-300 mb-1.5">Author</label>
+                            <input type="text" name="author" id="id_author"
+                                class="w-full px-4 py-2.5 rounded-xl bg-slate-900/50 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500/50 focus:border-violet-500 transition-all"
+                                placeholder="Author Name" required>
+                        </div>
+                        <div>
+                            <label for="id_thumbnail" class="block text-sm font-medium text-slate-300 mb-1.5">Thumbnail
+                                URL</label>
+                            <input type="url" name="thumbnail" id="id_thumbnail"
+                                class="w-full px-4 py-2.5 rounded-xl bg-slate-900/50 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500/50 focus:border-violet-500 transition-all"
+                                placeholder="https://..." required>
+                        </div>
+                        <div>
+                            <label for="id_quantity"
+                                class="block text-sm font-medium text-slate-300 mb-1.5">Quantity</label>
+                            <input type="number" name="quantity" id="id_quantity" min="1"
+                                class="w-full px-4 py-2.5 rounded-xl bg-slate-900/50 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500/50 focus:border-violet-500 transition-all"
+                                placeholder="1" required>
+                        </div>
+                        <button type="submit"
+                            class="w-full py-3 bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-500 hover:to-fuchsia-500 text-white font-bold rounded-xl shadow-lg shadow-violet-500/25 transition-all hover:-translate-y-0.5 mt-2">
+                            Add Book
+                        </button>
+                    </form>
+                </div>
             </div>
 
-            <!-- Active Loans Section -->
-            <section class="fade-in-up" style="animation-delay: 0.1s;">
-                <div class="flex items-center gap-3 mb-6">
-                    <div class="p-2 rounded-lg bg-blue-500/10 text-blue-400">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
-                            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
-                        </svg>
-                    </div>
-                    <h2 class="text-2xl font-bold">Active Loans</h2>
-                </div>
-
-                <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                    {% for entry in borrowed_books %}
-                    <div
-                        class="glass-card p-5 rounded-2xl group hover:border-violet-500/30 transition-all duration-300">
-                        <div class="flex items-start justify-between mb-4">
-                            <div
-                                class="w-12 h-12 rounded-lg bg-slate-800 flex items-center justify-center text-2xl overflow-hidden">
-                                {% if entry.book_id.thumbnail %}
-                                <img src="{{ entry.book_id.thumbnail }}" alt="" class="w-full h-full object-cover">
-                                {% else %}
-                                📘
-                                {% endif %}
-                            </div>
-                            <span
-                                class="px-2 py-1 rounded-md bg-blue-500/10 text-blue-400 text-xs font-bold border border-blue-500/10">
-                                Borrowed
-                            </span>
-                        </div>
-
-                        <h3 class="font-bold text-white truncate mb-1">{{ entry.book_id.book_name }}</h3>
-                        <div class="flex items-center gap-2 text-sm text-slate-400 mb-3">
-                            <span class="w-1.5 h-1.5 rounded-full bg-slate-600"></span>
-                            {{ entry.user_id.name }}
-                        </div>
-
-                        <div class="pt-3 border-t border-slate-800 flex justify-between text-xs">
-                            <div class="text-slate-500">
-                                Borrowed<br>
-                                <span class="text-slate-300">{{ entry.borrowed_date|date:"M d" }}</span>
-                            </div>
-                            <div class="text-right text-slate-500">
-                                Due<br>
-                                <span class="text-amber-400">{{ entry.due_date|date:"M d" }}</span>
-                            </div>
-                        </div>
-                    </div>
-                    {% empty %}
-                    <div
-                        class="col-span-full py-12 text-center rounded-2xl border border-dashed border-slate-800 bg-slate-900/30">
-                        <p class="text-slate-500">No active loans at the moment.</p>
-                    </div>
-                    {% endfor %}
-                </div>
-            </section>
-
-            <!-- Inventory Section -->
-            <section class="fade-in-up" style="animation-delay: 0.2s;">
-                <div class="flex items-center justify-between mb-6">
-                    <div class="flex items-center gap-3">
-                        <div class="p-2 rounded-lg bg-emerald-500/10 text-emerald-400">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round">
-                                <path d="M3 6h18"></path>
-                                <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
-                                <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
-                            </svg>
-                        </div>
-                        <h2 class="text-2xl font-bold">Library Inventory</h2>
-                    </div>
-                    <a href="{% url 'admin_manage' %}"
-                        class="text-sm text-violet-400 hover:text-violet-300 font-medium transition-colors">
-                        Manage Inventory →
-                    </a>
-                </div>
-
-                <div class="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+            <!-- Book List -->
+            <div class="lg:col-span-2 fade-in-up" style="animation-delay: 0.1s;">
+                <h2 class="text-xl font-bold mb-6">Inventory List</h2>
+                <div class="grid sm:grid-cols-2 gap-4">
                     {% for book in books %}
-                    <div
-                        class="glass-card rounded-2xl overflow-hidden group hover:-translate-y-1 transition-all duration-300">
-                        <div class="h-48 bg-slate-800 relative overflow-hidden">
+                    <div class="glass-card rounded-xl p-4 flex gap-4 group hover:border-violet-500/30 transition-all">
+                        <div class="w-20 h-28 rounded-lg bg-slate-800 flex-shrink-0 overflow-hidden">
                             {% if book.thumbnail %}
-                            <img src="{{ book.thumbnail }}" alt="{{ book.title }}"
-                                class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                            <img src="{{ book.thumbnail }}" alt="{{ book.title }}" class="w-full h-full object-cover">
                             {% else %}
-                            <div class="w-full h-full flex items-center justify-center text-4xl">📘</div>
+                            <div class="w-full h-full flex items-center justify-center text-2xl">📘</div>
                             {% endif %}
-                            <div class="absolute inset-0 bg-gradient-to-t from-slate-900 to-transparent opacity-60">
-                            </div>
-                            <div class="absolute bottom-3 left-3 right-3 flex justify-between items-end">
-                                <span
-                                    class="px-2 py-1 rounded bg-black/50 backdrop-blur-md text-xs font-bold text-white border border-white/10">
-                                    Qty: {{ book.quantity }}
-                                </span>
-                            </div>
                         </div>
-                        <div class="p-4">
-                            <h3 class="font-bold text-white text-sm line-clamp-1 mb-1" title="{{ book.book_name }}">{{
-                                book.book_name }}</h3>
-                            <p class="text-slate-400 text-xs mb-3 line-clamp-1">{{ book.author }}</p>
+                        <div class="flex-grow flex flex-col justify-between">
+                            <div>
+                                <h3 class="font-bold text-white line-clamp-1" title="{{ book.book_name }}">{{ book.book_name }}</h3>
+                                <p class="text-slate-400 text-sm line-clamp-1">{{ book.author }}</p>
+                                <div
+                                    class="mt-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-slate-800 text-slate-300 border border-slate-700">
+                                    Qty: {{ book.quantity }}
+                                </div>
+                            </div>
+                            <form method="post" action="{% url 'admin_delete_book' book.id %}">
+                                {% csrf_token %}
+                                <button type="submit"
+                                    class="text-xs text-red-400 hover:text-red-300 hover:underline mt-2 flex items-center gap-1"
+                                    onclick="return confirm('Are you sure you want to delete this book?');">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <polyline points="3 6 5 6 21 6"></polyline>
+                                        <path
+                                            d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
+                                        </path>
+                                    </svg>
+                                    Delete Book
+                                </button>
+                            </form>
                         </div>
                     </div>
                     {% empty %}
-                    <div class="col-span-full py-12 text-center text-slate-500">
+                    <div
+                        class="col-span-full py-12 text-center text-slate-500 border border-dashed border-slate-800 rounded-xl">
                         No books in inventory.
                     </div>
                     {% endfor %}
                 </div>
-            </section>
+            </div>
 
         </div>
     </main>

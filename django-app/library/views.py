@@ -3,7 +3,7 @@ from django.contrib import messages
 from django.db.models import Q #coisa boa
 from django.contrib.auth.hashers import check_password
 from .forms import UserLoginForm, UserRegisterForm, AddBookForm
-from .models import Books, Users, BooksBorrowed
+from .models import Books, Users, BooksBorrowed, Categories
 from datetime import datetime, timedelta
 
 
@@ -99,10 +99,19 @@ def index(request):
             "title": book.book_name,
             "authors": book.author,
             "thumbnail": book.thumbnail,
+            "quantity": book.quantity,
             "categories": [c.category_id.category_name for c in book.categoriesperbook_set.all()]
         })
 
-    return render(request, "index.html", {"books": books, "user_id": user_id, "user_role": user_role})
+    # Fetch all categories for the filter
+    all_categories = Categories.objects.all()
+
+    return render(request, "index.html", {
+        "books": books, 
+        "user_id": user_id, 
+        "user_role": user_role,
+        "all_categories": all_categories
+    })
 
 # ------------------------------
 # USER DASHBOARD
