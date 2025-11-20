@@ -3,7 +3,7 @@ from django.contrib import messages
 from django.db.models import Q #coisa boa
 from django.contrib.auth.hashers import check_password
 from .forms import UserLoginForm, UserRegisterForm, AddBookForm
-from .models import Books, Users, BooksBorrowed
+from .models import Books, Users, BooksBorrowed, Categories
 from datetime import datetime, timedelta
 
 
@@ -99,10 +99,19 @@ def index(request):
             "title": book.book_name,
             "authors": book.author,
             "thumbnail": book.thumbnail,
+            "quantity": book.quantity,
             "categories": [c.category_id.category_name for c in book.categoriesperbook_set.all()]
         })
 
-    return render(request, "index.html", {"books": books, "user_id": user_id, "user_role": user_role})
+    # Fetch all categories for the filter
+    all_categories = Categories.objects.all()
+
+    return render(request, "index.html", {
+        "books": books, 
+        "user_id": user_id, 
+        "user_role": user_role,
+        "all_categories": all_categories
+    })
 
 # ------------------------------
 # USER DASHBOARD
@@ -162,12 +171,12 @@ def borrow_book(request, book_id):
         return redirect("index")
 
     # Criar borrow com limite de 2 meses
-    borrow_date = datetime.now()
-    due_date = borrow_date + timedelta(days=60)  # 2 meses aproximados
+    borrowed_date = datetime.now()
+    due_date = borrowed_date + timedelta(days=60)  # 2 meses aproximados
     BooksBorrowed.objects.create(
         user_id=user,
         book_id=book,
-        borrow_date=borrow_date,
+        borrowed_date=borrowed_date,
         due_date=due_date
     )
 
@@ -268,6 +277,6 @@ def admin_delete_book(request, book_id):
     return redirect("admin_manage")
 
 
-def logout_user(request):
+def auth_logout(request):
     request.session.flush()  
     return redirect('index')
