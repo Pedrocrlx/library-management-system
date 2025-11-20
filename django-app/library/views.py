@@ -162,12 +162,12 @@ def borrow_book(request, book_id):
         return redirect("index")
 
     # Criar borrow com limite de 2 meses
-    borrow_date = datetime.now()
-    due_date = borrow_date + timedelta(days=60)  # 2 meses aproximados
+    borrowed_date = datetime.now()
+    due_date = borrowed_date + timedelta(days=60)  # 2 meses aproximados
     BooksBorrowed.objects.create(
         user_id=user,
         book_id=book,
-        borrow_date=borrow_date,
+        borrowed_date=borrowed_date,
         due_date=due_date
     )
 
@@ -268,6 +268,6 @@ def admin_delete_book(request, book_id):
     return redirect("admin_manage")
 
 
-def logout_user(request):
+def auth_logout(request):
     request.session.flush()  
     return redirect('index')
