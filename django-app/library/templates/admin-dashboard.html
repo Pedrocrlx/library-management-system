@@ -49,6 +49,7 @@
                     <h3 class="font-bold text-lg">{{ book.book_name }}</h3>
                     <p class="text-gray-600 mt-1">{{ book.author }}</p>
                     <p class="text-gray-500 mt-2">Available: {{ book.quantity }}</p>
+                    <img src="{{ book.thumbnail }}" alt="{{ book.title }}" class="h-64 w-full object-cover">
                 </div>
             {% empty %}
                 <p class="text-gray-500 col-span-full">No books in library.</p>

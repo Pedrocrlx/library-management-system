@@ -69,6 +69,12 @@
                     <p class="text-gray-600 mt-1">{{ book.author }}</p>
                     <p class="text-gray-500 mt-2">Available: {{ book.quantity }}</p>
                     <img src="{{ book.thumbnail }}" alt="{{ book.title }}" class="h-64 w-full object-cover">
+                    <form method="post" action="{% url 'admin_delete_book' book.id %}" class="mt-4">
+                        {% csrf_token %}
+                        <button type="submit" class="w-full py-2 bg-red-500 hover:bg-red-400 text-white font-semibold rounded-xl transition" onclick="return confirm('Are you sure you want to delete this book?');">
+                            Delete Book
+                        </button>
+                    </form>
                 </div>
             {% empty %}
                 <p class="text-gray-500 col-span-full">No books in library.</p>
