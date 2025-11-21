@@ -138,59 +138,7 @@
                     </form>
                 </div>
             </div>
-
             <!-- Book List -->
-            <div class="lg:col-span-2 fade-in-up" style="animation-delay: 0.1s;">
-                <h2 class="text-xl font-bold mb-6">Inventory List</h2>
-                <div class="grid sm:grid-cols-2 gap-4">
-                    {% for book in books %}
-                    <div class="glass-card rounded-xl p-4 flex gap-4 group hover:border-violet-500/30 transition-all">
-                        <div class="w-20 h-28 rounded-lg bg-slate-800 flex-shrink-0 overflow-hidden">
-                            {% if book.thumbnail %}
-                            <img src="{{ book.thumbnail }}" alt="{{ book.title }}" class="w-full h-full object-cover">
-                            {% else %}
-                            <div class="w-full h-full flex items-center justify-center text-2xl">📘</div>
-                            {% endif %}
-                        </div>
-                        <div class="flex-grow flex flex-col justify-between">
-                            <div>
-                                <h3 class="font-bold text-white line-clamp-1" title="{{ book.book_name }}">{{ book.book_name }}</h3>
-                                <p class="text-slate-400 text-sm line-clamp-1">{{ book.author }}</p>
-                                <div
-                                    class="mt-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-slate-800 text-slate-300 border border-slate-700">
-                                    Qty: {{ book.quantity }}
-                                </div>
-                            </div>
-                            <form method="post" action="{% url 'admin_delete_book' book.id %}">
-                                {% csrf_token %}
-                                <button type="submit"
-                                    class="text-xs text-red-400 hover:text-red-300 hover:underline mt-2 flex items-center gap-1"
-                                    onclick="return confirm('Are you sure you want to delete this book?');">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24"
-                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                        stroke-linejoin="round">
-                                        <polyline points="3 6 5 6 21 6"></polyline>
-                                        <path
-                                            d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
-                                        </path>
-                                    </svg>
-                                    Delete Book
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                    {% empty %}
-                    <div
-                        class="col-span-full py-12 text-center text-slate-500 border border-dashed border-slate-800 rounded-xl">
-                        No books in inventory.
-                    </div>
-                    {% endfor %}
-                </div>
-            </div>
-
-        </div>
-
-        <!-- Book List -->
         <div class="lg:col-span-2 fade-in-up" style="animation-delay: 0.1s">
           <h2 class="text-xl font-bold mb-6">Inventory List</h2>
           <div class="grid sm:grid-cols-2 gap-4">
@@ -300,14 +248,8 @@
         </div>
       </div>
     </main>
-<<<<<<< HEAD
-  </body>
-</html>
-=======
     <script>
         let categoryCount = 1; 
-
-
         document.getElementById('add-category-btn').addEventListener('click', function() {
 
         const clonedSelect = document.getElementById('id_category').cloneNode(true);
@@ -328,8 +270,5 @@
         container.appendChild(clonedSelect); 
         });
     </script>
-
-</body>
-
+  </body>
 </html>
->>>>>>> c334ac0 (refator: admin add book categories field.)
