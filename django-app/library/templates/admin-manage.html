@@ -1,169 +1,269 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Manage Books - Midnight Library</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
-        rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
 
     <style>
-        body {
-            background-color: #020617;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            color: #f8fafc;
-        }
+      body {
+        background-color: #020617;
+        font-family: "Plus Jakarta Sans", sans-serif;
+        color: #f8fafc;
+      }
 
-        .glass-nav {
-            background: rgba(2, 6, 23, 0.8);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        }
+      .glass-nav {
+        background: rgba(2, 6, 23, 0.8);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      }
 
-        .glass-card {
-            background: rgba(15, 23, 42, 0.6);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
+      .glass-card {
+        background: rgba(15, 23, 42, 0.6);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+      }
 
-        .fade-in-up {
-            animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-            opacity: 0;
-            transform: translateY(20px);
-        }
+      .fade-in-up {
+        animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        opacity: 0;
+        transform: translateY(20px);
+      }
 
-        @keyframes fadeInUp {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+      @keyframes fadeInUp {
+        to {
+          opacity: 1;
+          transform: translateY(0);
         }
+      }
     </style>
-</head>
+  </head>
 
-<body class="min-h-screen flex flex-col selection:bg-violet-500 selection:text-white">
-
+  <body
+    class="min-h-screen flex flex-col selection:bg-violet-500 selection:text-white"
+  >
     <!-- Navbar -->
     <nav class="fixed top-0 w-full z-50 glass-nav">
-        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-            <div class="flex items-center gap-2">
-                <div
-                    class="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-600 to-fuchsia-600 flex items-center justify-center text-xl shadow-lg shadow-violet-500/20">
-                    ⚙️
-                </div>
-                <span
-                    class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400">Manage
-                    Inventory</span>
-            </div>
-            <a href="{% url 'admin_dashboard' %}"
-                class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-sm font-medium transition-all border border-slate-700">
-                ← Back to Dashboard
-            </a>
+      <div
+        class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center"
+      >
+        <div class="flex items-center gap-2">
+          <div
+            class="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-600 to-fuchsia-600 flex items-center justify-center text-xl shadow-lg shadow-violet-500/20"
+          >
+            ⚙️
+          </div>
+          <span
+            class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400"
+            >Manage Inventory</span
+          >
         </div>
+        <a
+          href="{% url 'admin_dashboard' %}"
+          class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-sm font-medium transition-all border border-slate-700"
+        >
+          ← Back to Dashboard
+        </a>
+      </div>
     </nav>
 
     <!-- Main Content -->
     <main class="flex-grow pt-32 pb-20 px-6">
-        <div class="max-w-7xl mx-auto grid lg:grid-cols-3 gap-8">
-
-            <!-- Add Book Form -->
-            <div class="lg:col-span-1">
-                <div class="glass-card rounded-2xl p-6 sticky top-32 fade-in-up">
-                    <h2 class="text-xl font-bold mb-6 flex items-center gap-2">
-                        <span class="text-violet-400">+</span> Add New Book
-                    </h2>
-                    <form method="post" class="space-y-4">
-                        {% csrf_token %}
-                        <div>
-                            <label for="id_title" class="block text-sm font-medium text-slate-300 mb-1.5">Title</label>
-                            <input type="text" name="title" id="id_title"
-                                class="w-full px-4 py-2.5 rounded-xl bg-slate-900/50 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500/50 focus:border-violet-500 transition-all"
-                                placeholder="Book Title" required>
-                        </div>
-                        <div>
-                            <label for="id_author"
-                                class="block text-sm font-medium text-slate-300 mb-1.5">Author</label>
-                            <input type="text" name="author" id="id_author"
-                                class="w-full px-4 py-2.5 rounded-xl bg-slate-900/50 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500/50 focus:border-violet-500 transition-all"
-                                placeholder="Author Name" required>
-                        </div>
-                        <div>
-                            <label for="id_thumbnail" class="block text-sm font-medium text-slate-300 mb-1.5">Thumbnail
-                                URL</label>
-                            <input type="url" name="thumbnail" id="id_thumbnail"
-                                class="w-full px-4 py-2.5 rounded-xl bg-slate-900/50 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500/50 focus:border-violet-500 transition-all"
-                                placeholder="https://..." required>
-                        </div>
-                        <div>
-                            <label for="id_quantity"
-                                class="block text-sm font-medium text-slate-300 mb-1.5">Quantity</label>
-                            <input type="number" name="quantity" id="id_quantity" min="1"
-                                class="w-full px-4 py-2.5 rounded-xl bg-slate-900/50 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500/50 focus:border-violet-500 transition-all"
-                                placeholder="1" required>
-                        </div>
-                        <button type="submit"
-                            class="w-full py-3 bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-500 hover:to-fuchsia-500 text-white font-bold rounded-xl shadow-lg shadow-violet-500/25 transition-all hover:-translate-y-0.5 mt-2">
-                            Add Book
-                        </button>
-                    </form>
-                </div>
-            </div>
-
-            <!-- Book List -->
-            <div class="lg:col-span-2 fade-in-up" style="animation-delay: 0.1s;">
-                <h2 class="text-xl font-bold mb-6">Inventory List</h2>
-                <div class="grid sm:grid-cols-2 gap-4">
-                    {% for book in books %}
-                    <div class="glass-card rounded-xl p-4 flex gap-4 group hover:border-violet-500/30 transition-all">
-                        <div class="w-20 h-28 rounded-lg bg-slate-800 flex-shrink-0 overflow-hidden">
-                            {% if book.thumbnail %}
-                            <img src="{{ book.thumbnail }}" alt="{{ book.title }}" class="w-full h-full object-cover">
-                            {% else %}
-                            <div class="w-full h-full flex items-center justify-center text-2xl">📘</div>
-                            {% endif %}
-                        </div>
-                        <div class="flex-grow flex flex-col justify-between">
-                            <div>
-                                <h3 class="font-bold text-white line-clamp-1" title="{{ book.book_name }}">{{ book.book_name }}</h3>
-                                <p class="text-slate-400 text-sm line-clamp-1">{{ book.author }}</p>
-                                <div
-                                    class="mt-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-slate-800 text-slate-300 border border-slate-700">
-                                    Qty: {{ book.quantity }}
-                                </div>
-                            </div>
-                            <form method="post" action="{% url 'admin_delete_book' book.id %}">
-                                {% csrf_token %}
-                                <button type="submit"
-                                    class="text-xs text-red-400 hover:text-red-300 hover:underline mt-2 flex items-center gap-1"
-                                    onclick="return confirm('Are you sure you want to delete this book?');">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24"
-                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                        stroke-linejoin="round">
-                                        <polyline points="3 6 5 6 21 6"></polyline>
-                                        <path
-                                            d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
-                                        </path>
-                                    </svg>
-                                    Delete Book
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                    {% empty %}
-                    <div
-                        class="col-span-full py-12 text-center text-slate-500 border border-dashed border-slate-800 rounded-xl">
-                        No books in inventory.
-                    </div>
-                    {% endfor %}
-                </div>
-            </div>
-
+      <div class="max-w-7xl mx-auto grid lg:grid-cols-3 gap-8">
+        <!-- Add Book Form -->
+        <div class="lg:col-span-1">
+          <div class="glass-card rounded-2xl p-6 sticky top-32 fade-in-up">
+            <h2 class="text-xl font-bold mb-6 flex items-center gap-2">
+              <span class="text-violet-400">+</span> Add New Book
+            </h2>
+            <form method="post" class="space-y-4">
+              {% csrf_token %}
+              <div>
+                <label
+                  for="id_title"
+                  class="block text-sm font-medium text-slate-300 mb-1.5"
+                  >Title</label
+                >
+                <input
+                  type="text"
+                  name="title"
+                  id="id_title"
+                  class="w-full px-4 py-2.5 rounded-xl bg-slate-900/50 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500/50 focus:border-violet-500 transition-all"
+                  placeholder="Book Title"
+                  required
+                />
+              </div>
+              <div>
+                <label
+                  for="id_author"
+                  class="block text-sm font-medium text-slate-300 mb-1.5"
+                  >Author</label
+                >
+                <input
+                  type="text"
+                  name="author"
+                  id="id_author"
+                  class="w-full px-4 py-2.5 rounded-xl bg-slate-900/50 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500/50 focus:border-violet-500 transition-all"
+                  placeholder="Author Name"
+                  required
+                />
+              </div>
+              <div>
+                <label
+                  for="id_thumbnail"
+                  class="block text-sm font-medium text-slate-300 mb-1.5"
+                  >Thumbnail URL</label
+                >
+                <input
+                  type="url"
+                  name="thumbnail"
+                  id="id_thumbnail"
+                  class="w-full px-4 py-2.5 rounded-xl bg-slate-900/50 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500/50 focus:border-violet-500 transition-all"
+                  placeholder="https://..."
+                  required
+                />
+              </div>
+              <div>
+                <label
+                  for="id_quantity"
+                  class="block text-sm font-medium text-slate-300 mb-1.5"
+                  >Quantity</label
+                >
+                <input
+                  type="number"
+                  name="quantity"
+                  id="id_quantity"
+                  min="1"
+                  class="w-full px-4 py-2.5 rounded-xl bg-slate-900/50 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500/50 focus:border-violet-500 transition-all"
+                  placeholder="1"
+                  required
+                />
+              </div>
+              <button
+                type="submit"
+                class="w-full py-3 bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-500 hover:to-fuchsia-500 text-white font-bold rounded-xl shadow-lg shadow-violet-500/25 transition-all hover:-translate-y-0.5 mt-2"
+              >
+                Add Book
+              </button>
+            </form>
+          </div>
         </div>
+
+        <!-- Book List -->
+        <div class="lg:col-span-2 fade-in-up" style="animation-delay: 0.1s">
+          <h2 class="text-xl font-bold mb-6">Inventory List</h2>
+          <div class="grid sm:grid-cols-2 gap-4">
+            {% for book in books %}
+            <div
+              class="glass-card rounded-xl p-4 flex gap-4 group hover:border-violet-500/30 transition-all"
+            >
+              <div
+                class="w-20 h-28 rounded-lg bg-slate-800 flex-shrink-0 overflow-hidden"
+              >
+                {% if book.thumbnail %}
+                <img
+                  src="{{ book.thumbnail }}"
+                  alt="{{ book.title }}"
+                  class="w-full h-full object-cover"
+                />
+                {% else %}
+                <div
+                  class="w-full h-full flex items-center justify-center text-2xl"
+                >
+                  📘
+                </div>
+                {% endif %}
+              </div>
+              <div class="flex-grow flex flex-col justify-between">
+                <div>
+                  <h3
+                    class="font-bold text-white line-clamp-1"
+                    title="{{ book.book_name }}"
+                  >
+                    {{ book.book_name }}
+                  </h3>
+                  <p class="text-slate-400 text-sm line-clamp-1">
+                    {{ book.author }}
+                  </p>
+                  <div
+                    class="mt-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-slate-800 text-slate-300 border border-slate-700"
+                  >
+                    Qty: {{ book.quantity }}
+                  </div>
+                </div>
+                <form
+                  method="post"
+                  action="{% url 'admin_delete_book' book.id %}"
+                >
+                  {% csrf_token %}
+                  <button
+                    type="submit"
+                    class="text-xs text-red-400 hover:text-red-300 hover:underline mt-2 flex items-center gap-1"
+                    onclick="return confirm('Are you sure you want to delete this book?');"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="12"
+                      height="12"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <polyline points="3 6 5 6 21 6"></polyline>
+                      <path
+                        d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"
+                      ></path>
+                    </svg>
+                    Delete Book
+                  </button>
+                </form>
+                <form action="{% url 'update_book' book.id %}" method="post">
+                  {% csrf_token %}
+                  <button
+                    type="submit"
+                    href="{% url 'update_book' book.id %}"
+                    class="text-xs text-violet-400 hover:text-violet-300 hover:underline mt-2 flex items-center gap-1"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="12"
+                      height="12"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path d="M12 20h9"></path>
+                      <path
+                        d="M16.5 3.5a2.121 2.121 0 1 1 3 3L7 19l-4 1 1-4L16.5 3.5z"
+                      ></path>
+                    </svg>
+                    Edit Book
+                  </button>
+                </form>
+              </div>
+            </div>
+            {% empty %}
+            <div
+              class="col-span-full py-12 text-center text-slate-500 border border-dashed border-slate-800 rounded-xl"
+            >
+              No books in inventory.
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
     </main>
-
-</body>
-
+  </body>
 </html>

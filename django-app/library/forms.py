@@ -28,7 +28,6 @@ class PasswordValidationMixin:
                 "Password must contain at least one uppercase letter.")
         return pwd
 
-
 class UserRegisterForm(PasswordValidationMixin, forms.ModelForm):
     class Meta:
         model = Users
@@ -37,8 +36,13 @@ class UserRegisterForm(PasswordValidationMixin, forms.ModelForm):
             'password': forms.PasswordInput(),
         }
 
-
 class AddBookForm(forms.Form):
+    title = forms.CharField(label="Title", max_length=100, required=True)
+    author = forms.CharField(label="Author", max_length=100, required=True)
+    thumbnail = forms.URLField(label="Thumbnail URL", max_length=200)
+    quantity = forms.IntegerField(label="Quantity", min_value=1)
+
+class UpdateBookForm(forms.Form):
     title = forms.CharField(label="Title", max_length=100, required=True)
     author = forms.CharField(label="Author", max_length=100, required=True)
     thumbnail = forms.URLField(label="Thumbnail URL", max_length=200)

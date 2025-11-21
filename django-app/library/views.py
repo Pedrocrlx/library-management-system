@@ -2,7 +2,7 @@ from django.shortcuts import redirect, render
 from django.contrib import messages
 from django.db.models import Q #coisa boa
 from django.contrib.auth.hashers import check_password
-from .forms import UserLoginForm, UserRegisterForm, AddBookForm
+from .forms import UpdateBookForm, UserLoginForm, UserRegisterForm, AddBookForm
 from .models import Books, Users, BooksBorrowed, Categories
 from datetime import datetime, timedelta
 
@@ -211,6 +211,7 @@ def return_book(request, borrow_id):
 
     messages.success(request, f"You returned the book: {book.book_name}")
     return redirect("user_dashboard")
+
 # ------------------------------
 # ADMIN DASHBOARD
 # ------------------------------
@@ -231,7 +232,9 @@ def admin_dashboard(request):
         "borrowed_books": borrowed_books
     })
 
-
+# ------------------------------
+# ADMIN CRUD ADD/DELETE/UPDATE BOOKS
+# ------------------------------
 def admin_manage(request):
     role = request.session.get("user_role")
 
@@ -261,6 +264,7 @@ def admin_manage(request):
 
     return render(request, "admin-manage.html", {"form": form, "books": books})
 
+
 def admin_delete_book(request, book_id):
     role = request.session.get("user_role")
 
@@ -276,6 +280,47 @@ def admin_delete_book(request, book_id):
 
     return redirect("admin_manage")
 
+
+def update_book(request, book_id):
+    role = request.session.get("user_role")
+
+    if role != "admin":
+        return redirect("index")  
+
+    try:
+        book = Books.objects.get(id=book_id)
+    except Books.DoesNotExist:
+        messages.error(request, "Book not found.")
+        return redirect("admin_manage")
+
+    if request.method == "POST":
+        form = UpdateBookForm(request.POST)
+
+        if form.is_valid():
+            book.book_name = form.cleaned_data["title"]
+            book.author = form.cleaned_data["author"]
+            book.thumbnail = form.cleaned_data["thumbnail"]
+            book.quantity = form.cleaned_data["quantity"]
+            book.save()
+            messages.success(request, "Book updated successfully!")
+            return redirect("admin_manage")
+        else:
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f"{field}: {error}")
+    else:
+        form = UpdateBookForm(initial={
+            "title": book.book_name,
+            "author": book.author,
+            "thumbnail": book.thumbnail,
+            "quantity": book.quantity
+        })
+
+    return render(request, "admin-update-book.html", {"form": form, "book": book})
+
+# ------------------------------
+# ADMIN CRUD ADD/UPDATE/DELETE BOOKS
+# ------------------------------
 
 def auth_logout(request):
     request.session.flush()  
