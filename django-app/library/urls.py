@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import index, auth_logout, update_book, user_login, user_register, admin_dashboard, user_dashboard, admin_manage, borrow_book, return_book, admin_delete_book
+from .views import index, auth_logout, update_book, user_login, user_register, admin_dashboard, user_dashboard, admin_manage, borrow_book, return_book, admin_delete_book, add_category
 
 urlpatterns = [ 
     path("", index, name="index"),
@@ -13,4 +13,5 @@ urlpatterns = [
     path('borrow/<int:book_id>/', borrow_book, name='borrow_book'),
     path("return/<int:borrow_id>/", return_book, name="return_book"),
     path("dashboard/admin/<int:book_id>/delete", admin_delete_book, name="admin_delete_book"),
+    path('add-category/', add_category, name='add_category'),
 ]

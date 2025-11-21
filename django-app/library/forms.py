@@ -1,5 +1,5 @@
 from django import forms
-from .models import Users
+from .models import Users, Categories
 
 
 class UserLoginForm(forms.Form):
@@ -47,3 +47,16 @@ class UpdateBookForm(forms.Form):
     author = forms.CharField(label="Author", max_length=100, required=True)
     thumbnail = forms.URLField(label="Thumbnail URL", max_length=200)
     quantity = forms.IntegerField(label="Quantity", min_value=1)
+    category = forms.ModelChoiceField(
+        queryset=Categories.objects.all(),
+        label="Category",
+        empty_label="Select a Category",
+        widget=forms.Select(attrs={
+            'class': 'w-full px-4 py-2.5 rounded-xl bg-slate-900/50 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500/50 focus:border-violet-500 transition-all'
+        })
+    )
+    
+class AddCategoryForm(forms.ModelForm):
+    class Meta:
+        model = Categories
+        fields = ['category_name']
