@@ -2,11 +2,7 @@ from django.shortcuts import redirect, render
 from django.contrib import messages
 from django.db.models import Q #coisa boa
 from django.contrib.auth.hashers import check_password
-<<<<<<< HEAD
-from .forms import UpdateBookForm, UserLoginForm, UserRegisterForm, AddBookForm
-=======
-from .forms import UserLoginForm, UserRegisterForm, AddBookForm, AddCategoryForm
->>>>>>> c334ac0 (refator: admin add book categories field.)
+from .forms import UserLoginForm, UserRegisterForm, AddBookForm, AddCategoryForm, UpdateBookForm
 from .models import Books, Users, BooksBorrowed, Categories
 from datetime import datetime, timedelta
 
