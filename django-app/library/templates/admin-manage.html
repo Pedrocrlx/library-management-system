@@ -1,269 +1,408 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Manage Books - Midnight Library</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
-      rel="stylesheet"
-    />
 
-    <style>
-      body {
-        background-color: #020617;
-        font-family: "Plus Jakarta Sans", sans-serif;
-        color: #f8fafc;
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Manage Books - Midnight Library</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet" />
+
+  <style>
+    body {
+      background-color: #020617;
+      font-family: "Plus Jakarta Sans", sans-serif;
+      color: #f8fafc;
+    }
+
+    .glass-nav {
+      background: rgba(2, 6, 23, 0.8);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .glass-card {
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .fade-in-up {
+      animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
       }
+    }
+  </style>
+</head>
 
-      .glass-nav {
-        background: rgba(2, 6, 23, 0.8);
-        backdrop-filter: blur(12px);
-        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-      }
-
-      .glass-card {
-        background: rgba(15, 23, 42, 0.6);
-        backdrop-filter: blur(12px);
-        border: 1px solid rgba(255, 255, 255, 0.05);
-      }
-
-      .fade-in-up {
-        animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        opacity: 0;
-        transform: translateY(20px);
-      }
-
-      @keyframes fadeInUp {
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-    </style>
-  </head>
-
-  <body
-    class="min-h-screen flex flex-col selection:bg-violet-500 selection:text-white"
-  >
-    <!-- Navbar -->
-    <nav class="fixed top-0 w-full z-50 glass-nav">
-      <div
-        class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center"
-      >
-        <div class="flex items-center gap-2">
-          <div
-            class="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-600 to-fuchsia-600 flex items-center justify-center text-xl shadow-lg shadow-violet-500/20"
-          >
-            ⚙️
-          </div>
-          <span
-            class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400"
-            >Manage Inventory</span
-          >
+<body class="min-h-screen flex flex-col selection:bg-violet-500 selection:text-white">
+  <!-- Navbar -->
+  <nav class="fixed top-0 w-full z-50 glass-nav">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+      <div class="flex items-center gap-2">
+        <div
+          class="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-600 to-fuchsia-600 flex items-center justify-center text-xl shadow-lg shadow-violet-500/20">
+          ⚙️
         </div>
-        <a
-          href="{% url 'admin_dashboard' %}"
-          class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-sm font-medium transition-all border border-slate-700"
-        >
-          ← Back to Dashboard
-        </a>
+        <span class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400">Manage
+          Inventory</span>
       </div>
-    </nav>
+      <a href="{% url 'admin_dashboard' %}"
+        class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-sm font-medium transition-all border border-slate-700">
+        ← Back to Dashboard
+      </a>
+    </div>
+  </nav>
 
-    <!-- Main Content -->
-    <main class="flex-grow pt-32 pb-20 px-6">
-      <div class="max-w-7xl mx-auto grid lg:grid-cols-3 gap-8">
-        <!-- Add Book Form -->
-        <div class="lg:col-span-1">
-          <div class="glass-card rounded-2xl p-6 sticky top-32 fade-in-up">
-            <h2 class="text-xl font-bold mb-6 flex items-center gap-2">
-              <span class="text-violet-400">+</span> Add New Book
-            </h2>
-            <form method="post" class="space-y-4">
-              {% csrf_token %}
-              <div>
-                <label
-                  for="id_title"
-                  class="block text-sm font-medium text-slate-300 mb-1.5"
-                  >Title</label
-                >
-                <input
-                  type="text"
-                  name="title"
-                  id="id_title"
-                  class="w-full px-4 py-2.5 rounded-xl bg-slate-900/50 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500/50 focus:border-violet-500 transition-all"
-                  placeholder="Book Title"
-                  required
-                />
-              </div>
-              <div>
-                <label
-                  for="id_author"
-                  class="block text-sm font-medium text-slate-300 mb-1.5"
-                  >Author</label
-                >
-                <input
-                  type="text"
-                  name="author"
-                  id="id_author"
-                  class="w-full px-4 py-2.5 rounded-xl bg-slate-900/50 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500/50 focus:border-violet-500 transition-all"
-                  placeholder="Author Name"
-                  required
-                />
-              </div>
-              <div>
-                <label
-                  for="id_thumbnail"
-                  class="block text-sm font-medium text-slate-300 mb-1.5"
-                  >Thumbnail URL</label
-                >
-                <input
-                  type="url"
-                  name="thumbnail"
-                  id="id_thumbnail"
-                  class="w-full px-4 py-2.5 rounded-xl bg-slate-900/50 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500/50 focus:border-violet-500 transition-all"
-                  placeholder="https://..."
-                  required
-                />
-              </div>
-              <div>
-                <label
-                  for="id_quantity"
-                  class="block text-sm font-medium text-slate-300 mb-1.5"
-                  >Quantity</label
-                >
-                <input
-                  type="number"
-                  name="quantity"
-                  id="id_quantity"
-                  min="1"
-                  class="w-full px-4 py-2.5 rounded-xl bg-slate-900/50 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500/50 focus:border-violet-500 transition-all"
-                  placeholder="1"
-                  required
-                />
-              </div>
-              <button
-                type="submit"
-                class="w-full py-3 bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-500 hover:to-fuchsia-500 text-white font-bold rounded-xl shadow-lg shadow-violet-500/25 transition-all hover:-translate-y-0.5 mt-2"
-              >
-                Add Book
-              </button>
-            </form>
-          </div>
+  <!-- Main Content -->
+  <main class="flex-grow pt-32 pb-20 px-6">
+
+    <div class="max-w-5xl mx-auto">
+      <!-- Messages -->
+      {% if messages %}
+      <div class="lg:col-span-3 fade-in-up">
+        {% for message in messages %}
+        <div
+          class="p-4 rounded-xl {% if message.tags == 'error' %}bg-red-500/10 border-red-500/20 text-red-400{% else %}bg-emerald-500/10 border-emerald-500/20 text-emerald-400{% endif %} border text-center font-medium">
+          {{ message }}
         </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+      <!-- Header & Controls -->
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8 fade-in-up">
+        <h2 class="text-2xl font-bold">Inventory Management</h2>
+        <div class="flex items-center gap-4">
+          <!-- Search -->
+          <div class="relative w-full md:w-64">
+            <input type="text" id="book-search" placeholder="Search books..."
+              class="w-full px-4 py-2.5 rounded-xl bg-slate-900/50 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500/50 focus:border-violet-500 transition-all">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+              class="absolute right-3 top-3 text-slate-500 pointer-events-none">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+          </div>
 
-        <!-- Book List -->
-        <div class="lg:col-span-2 fade-in-up" style="animation-delay: 0.1s">
-          <h2 class="text-xl font-bold mb-6">Inventory List</h2>
-          <div class="grid sm:grid-cols-2 gap-4">
-            {% for book in books %}
-            <div
-              class="glass-card rounded-xl p-4 flex gap-4 group hover:border-violet-500/30 transition-all"
-            >
-              <div
-                class="w-20 h-28 rounded-lg bg-slate-800 flex-shrink-0 overflow-hidden"
-              >
-                {% if book.thumbnail %}
-                <img
-                  src="{{ book.thumbnail }}"
-                  alt="{{ book.title }}"
-                  class="w-full h-full object-cover"
-                />
-                {% else %}
+          <!-- Add Button -->
+          <button onclick="openAddModal()"
+            class="flex items-center gap-2 px-5 py-2.5 bg-violet-600 hover:bg-violet-500 text-white font-bold rounded-xl shadow-lg shadow-violet-500/25 transition-all hover:-translate-y-0.5 whitespace-nowrap">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            Add Book
+          </button>
+        </div>
+      </div>
+
+      <!-- Book List -->
+      <div class="fade-in-up" style="animation-delay: 0.1s">
+        <div id="books-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {% for book in books %}
+          <div class="book-item glass-card rounded-xl p-4 flex gap-4 group hover:border-violet-500/30 transition-all"
+            data-title="{{ book.book_name|lower }}" data-author="{{ book.author|lower }}">
+            <div class="w-20 h-28 rounded-lg bg-slate-800 flex-shrink-0 overflow-hidden">
+              {% if book.thumbnail %}
+              <img src="{{ book.thumbnail }}" alt="{{ book.title }}" class="w-full h-full object-cover" />
+              {% else %}
+              <div class="w-full h-full flex items-center justify-center text-2xl">
+                📘
+              </div>
+              {% endif %}
+            </div>
+            <div class="flex-grow flex flex-col justify-between">
+              <div>
+                <h3 class="font-bold text-white line-clamp-1" title="{{ book.book_name }}">
+                  {{ book.book_name }}
+                </h3>
+                <p class="text-slate-400 text-sm line-clamp-1">
+                  {{ book.author }}
+                </p>
                 <div
-                  class="w-full h-full flex items-center justify-center text-2xl"
-                >
-                  📘
+                  class="mt-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-slate-800 text-slate-300 border border-slate-700">
+                  Qty: {{ book.quantity }}
                 </div>
-                {% endif %}
               </div>
-              <div class="flex-grow flex flex-col justify-between">
+              <button type="button"
+                class="text-xs text-red-400 hover:text-red-300 hover:underline mt-2 flex items-center gap-1"
+                onclick="openDeleteModal('{{ book.id }}', '{{ book.book_name|escapejs }}')">
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="3 6 5 6 21 6"></polyline>
+                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                </svg>
+                Delete Book
+              </button>
+              <button type="button"
+                onclick="openEditModal('{{ book.id }}', '{{ book.book_name|escapejs }}', '{{ book.author|escapejs }}', '{{ book.thumbnail|escapejs }}', '{{ book.quantity }}')"
+                class="text-xs text-violet-400 hover:text-violet-300 hover:underline mt-2 flex items-center gap-1">
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 20h9"></path>
+                  <path d="M16.5 3.5a2.121 2.121 0 1 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+                </svg>
+                Edit Book
+              </button>
+            </div>
+          </div>
+          {% empty %}
+          <div class="col-span-full py-12 text-center text-slate-500 border border-dashed border-slate-800 rounded-xl">
+            No books in inventory.
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </main>
+</body>
+<!-- Add Book Modal -->
+<div id="add-modal" class="fixed inset-0 z-50 hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+  <!-- Backdrop -->
+  <div class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm transition-opacity" onclick="closeAddModal()"></div>
+
+  <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
+    <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+      <!-- Modal Panel -->
+      <div
+        class="relative transform overflow-hidden rounded-2xl bg-slate-900 border border-slate-700 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+        <div class="px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+          <div class="sm:flex sm:items-start">
+            <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left w-full">
+              <h3 class="text-xl font-bold leading-6 text-white mb-4" id="modal-title">Add New Book</h3>
+
+              <form method="post" class="space-y-4">
+                {% csrf_token %}
                 <div>
-                  <h3
-                    class="font-bold text-white line-clamp-1"
-                    title="{{ book.book_name }}"
-                  >
-                    {{ book.book_name }}
-                  </h3>
-                  <p class="text-slate-400 text-sm line-clamp-1">
-                    {{ book.author }}
-                  </p>
-                  <div
-                    class="mt-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-slate-800 text-slate-300 border border-slate-700"
-                  >
-                    Qty: {{ book.quantity }}
-                  </div>
+                  <label for="id_title" class="block text-sm font-medium text-slate-300 mb-1.5">Title</label>
+                  <input type="text" name="title" id="id_title"
+                    class="w-full px-4 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500/50 focus:border-violet-500 transition-all"
+                    placeholder="Book Title" required />
                 </div>
-                <form
-                  method="post"
-                  action="{% url 'admin_delete_book' book.id %}"
-                >
-                  {% csrf_token %}
-                  <button
-                    type="submit"
-                    class="text-xs text-red-400 hover:text-red-300 hover:underline mt-2 flex items-center gap-1"
-                    onclick="return confirm('Are you sure you want to delete this book?');"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="12"
-                      height="12"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    >
-                      <polyline points="3 6 5 6 21 6"></polyline>
-                      <path
-                        d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"
-                      ></path>
-                    </svg>
-                    Delete Book
+                <div>
+                  <label for="id_author" class="block text-sm font-medium text-slate-300 mb-1.5">Author</label>
+                  <input type="text" name="author" id="id_author"
+                    class="w-full px-4 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500/50 focus:border-violet-500 transition-all"
+                    placeholder="Author Name" required />
+                </div>
+                <div>
+                  <label for="id_thumbnail" class="block text-sm font-medium text-slate-300 mb-1.5">Thumbnail
+                    URL</label>
+                  <input type="url" name="thumbnail" id="id_thumbnail"
+                    class="w-full px-4 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500/50 focus:border-violet-500 transition-all"
+                    placeholder="https://..." required />
+                </div>
+                <div>
+                  <label for="id_quantity" class="block text-sm font-medium text-slate-300 mb-1.5">Quantity</label>
+                  <input type="number" name="quantity" id="id_quantity" min="1"
+                    class="w-full px-4 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500/50 focus:border-violet-500 transition-all"
+                    placeholder="1" required />
+                </div>
+
+                <div class="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse gap-3">
+                  <button type="submit"
+                    class="inline-flex w-full justify-center rounded-xl bg-violet-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-violet-500 sm:w-auto">
+                    Add Book
                   </button>
-                </form>
-                <form action="{% url 'update_book' book.id %}" method="post">
-                  {% csrf_token %}
-                  <button
-                    type="submit"
-                    href="{% url 'update_book' book.id %}"
-                    class="text-xs text-violet-400 hover:text-violet-300 hover:underline mt-2 flex items-center gap-1"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="12"
-                      height="12"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    >
-                      <path d="M12 20h9"></path>
-                      <path
-                        d="M16.5 3.5a2.121 2.121 0 1 1 3 3L7 19l-4 1 1-4L16.5 3.5z"
-                      ></path>
-                    </svg>
-                    Edit Book
+                  <button type="button"
+                    class="mt-3 inline-flex w-full justify-center rounded-xl bg-slate-800 px-3 py-2 text-sm font-semibold text-slate-300 shadow-sm ring-1 ring-inset ring-slate-700 hover:bg-slate-700 sm:mt-0 sm:w-auto"
+                    onclick="closeAddModal()">
+                    Cancel
                   </button>
-                </form>
-              </div>
+                </div>
+              </form>
             </div>
-            {% empty %}
-            <div
-              class="col-span-full py-12 text-center text-slate-500 border border-dashed border-slate-800 rounded-xl"
-            >
-              No books in inventory.
-            </div>
-            {% endfor %}
           </div>
         </div>
       </div>
-    </main>
-  </body>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Book Modal -->
+<div id="edit-modal" class="fixed inset-0 z-50 hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+  <!-- Backdrop -->
+  <div class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm transition-opacity" onclick="closeEditModal()"></div>
+
+  <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
+    <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+      <!-- Modal Panel -->
+      <div
+        class="relative transform overflow-hidden rounded-2xl bg-slate-900 border border-slate-700 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+        <div class="px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+          <div class="sm:flex sm:items-start">
+            <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left w-full">
+              <h3 class="text-xl font-bold leading-6 text-white mb-4" id="modal-title">Edit Book</h3>
+
+              <form id="edit-form" method="post" class="space-y-4">
+                {% csrf_token %}
+                <div>
+                  <label for="edit_title" class="block text-sm font-medium text-slate-300 mb-1.5">Title</label>
+                  <input type="text" name="title" id="edit_title"
+                    class="w-full px-4 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500/50 focus:border-violet-500 transition-all"
+                    required>
+                </div>
+                <div>
+                  <label for="edit_author" class="block text-sm font-medium text-slate-300 mb-1.5">Author</label>
+                  <input type="text" name="author" id="edit_author"
+                    class="w-full px-4 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500/50 focus:border-violet-500 transition-all"
+                    required>
+                </div>
+                <div>
+                  <label for="edit_thumbnail" class="block text-sm font-medium text-slate-300 mb-1.5">Thumbnail
+                    URL</label>
+                  <input type="url" name="thumbnail" id="edit_thumbnail"
+                    class="w-full px-4 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500/50 focus:border-violet-500 transition-all"
+                    required>
+                </div>
+                <div>
+                  <label for="edit_quantity" class="block text-sm font-medium text-slate-300 mb-1.5">Quantity</label>
+                  <input type="number" name="quantity" id="edit_quantity" min="1"
+                    class="w-full px-4 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500/50 focus:border-violet-500 transition-all"
+                    required>
+                </div>
+
+                <div class="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse gap-3">
+                  <button type="submit"
+                    class="inline-flex w-full justify-center rounded-xl bg-violet-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-violet-500 sm:w-auto">Save
+                    Changes</button>
+                  <button type="button"
+                    class="mt-3 inline-flex w-full justify-center rounded-xl bg-slate-800 px-3 py-2 text-sm font-semibold text-slate-300 shadow-sm ring-1 ring-inset ring-slate-700 hover:bg-slate-700 sm:mt-0 sm:w-auto"
+                    onclick="closeEditModal()">Cancel</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function openAddModal() {
+    const modal = document.getElementById('add-modal');
+    modal.classList.remove('hidden');
+  }
+
+  function closeAddModal() {
+    const modal = document.getElementById('add-modal');
+    modal.classList.add('hidden');
+  }
+
+  function openEditModal(id, title, author, thumbnail, quantity) {
+    const modal = document.getElementById('edit-modal');
+    const form = document.getElementById('edit-form');
+
+    // Set form action
+    form.action = `/update_book/${id}/`;
+
+    // Populate fields
+    document.getElementById('edit_title').value = title;
+    document.getElementById('edit_author').value = author;
+    document.getElementById('edit_thumbnail').value = thumbnail;
+    document.getElementById('edit_quantity').value = quantity;
+
+    modal.classList.remove('hidden');
+  }
+
+  function closeEditModal() {
+    const modal = document.getElementById('edit-modal');
+    modal.classList.add('hidden');
+  }
+
+  function openDeleteModal(id, title) {
+    const modal = document.getElementById('delete-modal');
+    const form = document.getElementById('delete-form');
+    const bookTitle = document.getElementById('delete-book-title');
+
+    form.action = `/dashboard/admin/${id}/delete`;
+    bookTitle.textContent = title;
+
+    modal.classList.remove('hidden');
+  }
+
+  function closeDeleteModal() {
+    const modal = document.getElementById('delete-modal');
+    modal.classList.add('hidden');
+  }
+
+  // Live Search for Books
+  const bookSearch = document.getElementById('book-search');
+  const bookItems = document.querySelectorAll('.book-item');
+
+  if (bookSearch) {
+    bookSearch.addEventListener('input', (e) => {
+      const query = e.target.value.toLowerCase();
+
+      bookItems.forEach(item => {
+        const title = item.dataset.title;
+        const author = item.dataset.author;
+
+        if (title.includes(query) || author.includes(query)) {
+          item.classList.remove('hidden');
+        } else {
+          item.classList.add('hidden');
+        }
+      });
+    });
+  }
+</script>
+</body>
+
+<!-- Delete Confirmation Modal -->
+<div id="delete-modal" class="fixed inset-0 z-50 hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+  <!-- Backdrop -->
+  <div class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm transition-opacity" onclick="closeDeleteModal()"></div>
+
+  <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
+    <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+      <!-- Modal Panel -->
+      <div
+        class="relative transform overflow-hidden rounded-2xl bg-slate-900 border border-slate-700 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-md">
+        <div class="px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+          <div class="sm:flex sm:items-start">
+            <div
+              class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-500/10 sm:mx-0 sm:h-10 sm:w-10">
+              <svg class="h-6 w-6 text-red-400" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+              </svg>
+            </div>
+            <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
+              <h3 class="text-base font-semibold leading-6 text-white" id="modal-title">Delete Book</h3>
+              <div class="mt-2">
+                <p class="text-sm text-slate-400">Are you sure you want to delete "<span id="delete-book-title"
+                    class="text-white font-medium"></span>"? This action cannot be undone.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="bg-slate-800/50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+          <form id="delete-form" method="post">
+            {% csrf_token %}
+            <button type="submit"
+              class="inline-flex w-full justify-center rounded-xl bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto">Delete</button>
+          </form>
+          <button type="button"
+            class="mt-3 inline-flex w-full justify-center rounded-xl bg-slate-800 px-3 py-2 text-sm font-semibold text-slate-300 shadow-sm ring-1 ring-inset ring-slate-700 hover:bg-slate-700 sm:mt-0 sm:w-auto"
+            onclick="closeDeleteModal()">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 </html>

@@ -81,8 +81,8 @@ def index(request):
     user_role = request.session.get("user_role")
     query = request.GET.get("q", "").strip()
 
-    # Get books with quantity > 0
-    books_qs = Books.objects.filter(quantity__gt=0).prefetch_related('categoriesperbook_set__category_id')
+    # Get all books
+    books_qs = Books.objects.all().prefetch_related('categoriesperbook_set__category_id')
 
     # Search filter
     if query:
@@ -109,11 +109,20 @@ def index(request):
     # Fetch all categories for the filter
     all_categories = Categories.objects.all()
 
+    # Fetch borrowed books for preview if user is logged in
+    borrowed_books = []
+    reached_limit = False
+    if user_id:
+        borrowed_books = BooksBorrowed.objects.filter(user_id=user_id).select_related('book_id')
+        reached_limit = borrowed_books.count() >= 3
+
     return render(request, "index.html", {
         "books": books, 
         "user_id": user_id, 
         "user_role": user_role,
-        "all_categories": all_categories
+        "all_categories": all_categories,
+        "borrowed_books": borrowed_books,
+        "reached_limit": reached_limit
     })
 
 # ------------------------------
@@ -224,15 +233,27 @@ def admin_dashboard(request):
     if role != "admin":
         return redirect("index")  # Block non-admins
 
-    # Fetch all books for management
+    # Fetch all books for management (needed for stats)
     books = Books.objects.all()
-
-    # Optional: fetch all borrowed books for overview
+    
+    # Calculate stats
+    total_titles = books.count()
+    total_books_count = sum(book.quantity for book in books)
+    
+    # Fetch all borrowed books
     borrowed_books = BooksBorrowed.objects.select_related("user_id", "book_id").all()
+    borrowed_count = borrowed_books.count()
+    
+    # Total holdings = Available + Borrowed
+    total_holdings = total_books_count + borrowed_count
 
     return render(request, "admin-dashboard.html", {
         "books": books,
-        "borrowed_books": borrowed_books
+        "borrowed_books": borrowed_books,
+        "total_titles": total_titles,
+        "total_books_count": total_books_count,
+        "borrowed_count": borrowed_count,
+        "total_holdings": total_holdings
     })
 
 # ------------------------------
@@ -311,6 +332,7 @@ def update_book(request, book_id):
             for field, errors in form.errors.items():
                 for error in errors:
                     messages.error(request, f"{field}: {error}")
+            return redirect("admin_manage")
     else:
         form = UpdateBookForm(initial={
             "title": book.book_name,

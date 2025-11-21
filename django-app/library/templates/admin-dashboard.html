@@ -84,21 +84,36 @@
 
             <!-- Active Loans Section -->
             <section class="fade-in-up" style="animation-delay: 0.1s;">
-                <div class="flex items-center gap-3 mb-6">
-                    <div class="p-2 rounded-lg bg-blue-500/10 text-blue-400">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
-                            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+                    <div class="flex items-center gap-3">
+                        <div class="p-2 rounded-lg bg-blue-500/10 text-blue-400">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                                <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                            </svg>
+                        </div>
+                        <h2 class="text-2xl font-bold">Active Loans</h2>
+                    </div>
+
+                    <!-- Search Active Loans -->
+                    <div class="relative w-full md:w-64">
+                        <input type="text" id="loan-search" placeholder="Search users..."
+                            class="w-full px-4 py-2 rounded-xl bg-slate-900/50 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500/50 focus:border-violet-500 transition-all">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="absolute right-3 top-3 text-slate-500 pointer-events-none">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                         </svg>
                     </div>
-                    <h2 class="text-2xl font-bold">Active Loans</h2>
                 </div>
 
-                <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                <div id="loans-grid" class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                     {% for entry in borrowed_books %}
-                    <div
-                        class="glass-card p-5 rounded-2xl group hover:border-violet-500/30 transition-all duration-300">
+                    <div class="loan-item glass-card p-5 rounded-2xl group hover:border-violet-500/30 transition-all duration-300"
+                        data-user="{{ entry.user_id.name|lower }}">
                         <div class="flex items-start justify-between mb-4">
                             <div
                                 class="w-12 h-12 rounded-lg bg-slate-800 flex items-center justify-center text-2xl overflow-hidden">
@@ -140,7 +155,7 @@
                 </div>
             </section>
 
-            <!-- Inventory Section -->
+            <!-- Inventory Stats Section -->
             <section class="fade-in-up" style="animation-delay: 0.2s;">
                 <div class="flex items-center justify-between mb-6">
                     <div class="flex items-center gap-3">
@@ -153,7 +168,7 @@
                                 <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
                             </svg>
                         </div>
-                        <h2 class="text-2xl font-bold">Library Inventory</h2>
+                        <h2 class="text-2xl font-bold">Inventory Stats</h2>
                     </div>
                     <a href="{% url 'admin_manage' %}"
                         class="text-sm text-violet-400 hover:text-violet-300 font-medium transition-colors">
@@ -161,43 +176,33 @@
                     </a>
                 </div>
 
-                <div id="inventory-grid" class="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-                    {% for book in books %}
-                    <div
-                        class="book-item glass-card rounded-2xl overflow-hidden group hover:-translate-y-1 transition-all duration-300">
-                        <div class="h-48 bg-slate-800 relative overflow-hidden">
-                            {% if book.thumbnail %}
-                            <img src="{{ book.thumbnail }}" alt="{{ book.title }}"
-                                class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                                onerror="this.onerror=null; this.src='https://placehold.co/400x600/1e293b/a78bfa?text=No+Cover';">
-                            {% else %}
-                            <div class="w-full h-full flex items-center justify-center text-4xl">📘</div>
-                            {% endif %}
-                            <div class="absolute inset-0 bg-gradient-to-t from-slate-900 to-transparent opacity-60">
-                            </div>
-                            <div class="absolute bottom-3 left-3 right-3 flex justify-between items-end">
-                                <span
-                                    class="px-2 py-1 rounded bg-black/50 backdrop-blur-md text-xs font-bold text-white border border-white/10">
-                                    Qty: {{ book.quantity }}
-                                </span>
-                            </div>
-                        </div>
-                        <div class="p-4">
-                            <h3 class="font-bold text-white text-sm line-clamp-1 mb-1" title="{{ book.book_name }}">{{ book.book_name }}</h3>
-                            <p class="text-slate-400 text-xs mb-3 line-clamp-1">{{ book.author }}</p>
+                <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                    <!-- Available Stock -->
+                    <div class="glass-card p-6 rounded-2xl">
+                        <p class="text-slate-400 text-sm font-medium mb-2">Currently in Inventory</p>
+                        <div class="flex items-baseline gap-2">
+                            <span class="text-4xl font-bold text-white">{{ total_books_count }}</span>
+                            <span class="text-sm text-slate-500">books available</span>
                         </div>
                     </div>
-                    {% empty %}
-                    <div class="col-span-full py-12 text-center text-slate-500">
-                        No books in inventory.
-                    </div>
-                    {% endfor %}
-                </div>
 
-                <!-- Sentinel for Client-Side Infinite Scroll -->
-                <div id="sentinel" class="h-20 flex items-center justify-center mt-8">
-                    <div class="w-8 h-8 border-4 border-violet-500 border-t-transparent rounded-full animate-spin hidden"
-                        id="loading-spinner"></div>
+                    <!-- Total Holdings -->
+                    <div class="glass-card p-6 rounded-2xl">
+                        <p class="text-slate-400 text-sm font-medium mb-2">Total Holdings</p>
+                        <div class="flex items-baseline gap-2">
+                            <span class="text-4xl font-bold text-white">{{ total_holdings }}</span>
+                            <span class="text-sm text-slate-500">books overall</span>
+                        </div>
+                    </div>
+
+                    <!-- Unique Titles -->
+                    <div class="glass-card p-6 rounded-2xl">
+                        <p class="text-slate-400 text-sm font-medium mb-2">Unique Titles</p>
+                        <div class="flex items-baseline gap-2">
+                            <span class="text-4xl font-bold text-white">{{ total_titles }}</span>
+                            <span class="text-sm text-slate-500">titles</span>
+                        </div>
+                    </div>
                 </div>
             </section>
 
@@ -205,54 +210,24 @@
     </main>
 
     <script>
-        // Client-side Infinite Scroll Logic
-        let visibleCount = 5; // Start with 5 (one row on xl screens)
-        const batchSize = 5;
+        // Search Active Loans
+        const loanSearch = document.getElementById('loan-search');
+        const loanItems = document.querySelectorAll('.loan-item');
 
-        function setupInfiniteScroll() {
-            const items = document.querySelectorAll('.book-item');
-            const sentinel = document.getElementById('sentinel');
-            const spinner = document.getElementById('loading-spinner');
+        if (loanSearch) {
+            loanSearch.addEventListener('input', (e) => {
+                const query = e.target.value.toLowerCase();
 
-            // Reset visibility
-            visibleCount = 5;
-
-            // Initial hide
-            updateVisibility(items);
-
-            // Setup Observer
-            if (window.bookObserver) window.bookObserver.disconnect();
-
-            window.bookObserver = new IntersectionObserver((entries) => {
-                if (entries[0].isIntersecting) {
-                    // Check if we have more to show
-                    if (visibleCount < items.length) {
-                        spinner.classList.remove('hidden');
-                        // Simulate small delay for effect or just show immediately
-                        setTimeout(() => {
-                            visibleCount += batchSize;
-                            updateVisibility(items);
-                            spinner.classList.add('hidden');
-                        }, 300);
+                loanItems.forEach(item => {
+                    const user = item.dataset.user;
+                    if (user.includes(query)) {
+                        item.classList.remove('hidden');
+                    } else {
+                        item.classList.add('hidden');
                     }
-                }
-            });
-
-            if (sentinel) window.bookObserver.observe(sentinel);
-        }
-
-        function updateVisibility(items) {
-            items.forEach((item, index) => {
-                if (index < visibleCount) {
-                    item.classList.remove('hidden');
-                } else {
-                    item.classList.add('hidden');
-                }
+                });
             });
         }
-
-        // Initialize on load
-        document.addEventListener('DOMContentLoaded', setupInfiniteScroll);
     </script>
 </body>
 

@@ -167,6 +167,36 @@
 
       <!-- Search & Filter Section -->
       <div class="mb-12 fade-in-up" style="animation-delay: 0.2s;">
+
+        {% if borrowed_books %}
+        <div class="max-w-3xl mx-auto mb-8">
+          <h2 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4 px-2">Currently Borrowing</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            {% for borrow in borrowed_books %}
+            <div
+              class="flex items-center gap-4 p-3 rounded-xl bg-slate-900/50 border border-slate-800 hover:border-violet-500/30 transition-colors group">
+              <div class="w-12 h-16 flex-shrink-0 rounded-lg overflow-hidden bg-slate-800 shadow-md">
+                {% if borrow.book_id.thumbnail %}
+                <img src="{{ borrow.book_id.thumbnail }}" class="w-full h-full object-cover"
+                  alt="{{ borrow.book_id.book_name }}">
+                {% else %}
+                <img src="https://placehold.co/400x600/1e293b/a78bfa?text=No+Cover" class="w-full h-full object-cover"
+                  alt="No Cover">
+                {% endif %}
+              </div>
+              <div class="min-w-0">
+                <h3 class="text-sm font-bold text-white truncate group-hover:text-violet-400 transition-colors"
+                  title="{{ borrow.book_id.book_name }}">
+                  {{ borrow.book_id.book_name }}
+                </h3>
+                <p class="text-xs text-slate-500 mt-1">Due: {{ borrow.due_date|date:"M d" }}</p>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+        {% endif %}
+
         <form id="search-form" method="get" action="{% url 'index' %}" class="max-w-3xl mx-auto mb-8">
           <div class="relative group">
             <div
@@ -275,10 +305,17 @@
             <div class="mt-auto pt-4 border-t border-slate-800">
               {% if user_id and user_role != 'admin' %}
               {% if book.quantity > 0 %}
+              {% if reached_limit %}
+              <button disabled
+                class="block w-full py-3 rounded-xl bg-slate-800 text-slate-500 font-bold text-center cursor-not-allowed border border-slate-700">
+                Limit Reached
+              </button>
+              {% else %}
               <a href="{% url 'borrow_book' book.id %}"
                 class="block w-full py-3 rounded-xl bg-white text-slate-950 font-bold text-center hover:bg-violet-400 transition-colors shadow-lg shadow-white/5">
                 Borrow Book
               </a>
+              {% endif %}
               {% else %}
               <button disabled
                 class="block w-full py-3 rounded-xl bg-slate-800 text-slate-500 font-bold text-center cursor-not-allowed">
