@@ -82,6 +82,14 @@
       </div>
       {% endif %}
 
+      {% if messages %}
+      {% for message in messages %}
+      <div class="p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-sm text-center">
+        {{ message }}
+      </div>
+      {% endfor %}
+      {% endif %}
+
       <button type="submit"
         class="w-full py-3.5 bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-500 hover:to-fuchsia-500 text-white font-bold rounded-xl shadow-lg shadow-violet-500/25 transition-all hover:-translate-y-0.5">
         Sign In

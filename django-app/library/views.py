@@ -17,15 +17,17 @@ def user_register(request):
         if form.is_valid():
             # Check email exists
             if Users.objects.filter(email=form.cleaned_data['email']).exists():
-                messages.error(request, "Email already registered.")
+                return render(request, 'user-register.html', {'form': form, 'error': "Email already registered."})
             else:
                 user = form.save()  
                 messages.success(request, f"Registration successful! Welcome, {user.name}.")
                 return redirect('auth_login')
         else:
+            error_msg = ""
             for field, errors in form.errors.items():
                 for error in errors:
-                    messages.error(request, f"{field}: {error}")
+                    error_msg += f"{field}: {error} "
+            return render(request, 'user-register.html', {'form': form, 'error': error_msg})
     else:
         form = UserRegisterForm()
 
@@ -48,8 +50,7 @@ def user_login(request):
             try:
                 user = Users.objects.get(name=name)
             except Users.DoesNotExist:
-                messages.error(request, "User not found.")
-                return render(request, "user-login.html", {"form": form})
+                return render(request, "user-login.html", {"form": form, "error": "User not found."})
 
 
             if check_password(password, user.password):
@@ -65,7 +66,7 @@ def user_login(request):
                     return redirect("index")
 
             else:
-                messages.error(request, "Incorrect password.")
+                return render(request, "user-login.html", {"form": form, "error": "Incorrect password."})
 
     else:
         form = UserLoginForm()
@@ -85,11 +86,13 @@ def index(request):
 
     # Search filter
     if query:
-        books_qs = books_qs.filter(
-            Q(book_name__icontains=query) | 
-            Q(author__icontains=query) |
-            Q(categoriesperbook__category_id__category_name__icontains=query)
-        ).distinct()
+        terms = query.split()
+        for term in terms:
+            books_qs = books_qs.filter(
+                Q(book_name__icontains=term) | 
+                Q(author__icontains=term) |
+                Q(categoriesperbook__category_id__category_name__icontains=term)
+            ).distinct()
 
     # Prepare data for template
     books = []

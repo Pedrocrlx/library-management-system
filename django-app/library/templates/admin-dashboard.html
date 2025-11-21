@@ -161,14 +161,15 @@
                     </a>
                 </div>
 
-                <div class="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+                <div id="inventory-grid" class="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
                     {% for book in books %}
                     <div
-                        class="glass-card rounded-2xl overflow-hidden group hover:-translate-y-1 transition-all duration-300">
+                        class="book-item glass-card rounded-2xl overflow-hidden group hover:-translate-y-1 transition-all duration-300">
                         <div class="h-48 bg-slate-800 relative overflow-hidden">
                             {% if book.thumbnail %}
                             <img src="{{ book.thumbnail }}" alt="{{ book.title }}"
-                                class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                                class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                onerror="this.onerror=null; this.src='https://placehold.co/400x600/1e293b/a78bfa?text=No+Cover';">
                             {% else %}
                             <div class="w-full h-full flex items-center justify-center text-4xl">📘</div>
                             {% endif %}
@@ -192,11 +193,67 @@
                     </div>
                     {% endfor %}
                 </div>
+
+                <!-- Sentinel for Client-Side Infinite Scroll -->
+                <div id="sentinel" class="h-20 flex items-center justify-center mt-8">
+                    <div class="w-8 h-8 border-4 border-violet-500 border-t-transparent rounded-full animate-spin hidden"
+                        id="loading-spinner"></div>
+                </div>
             </section>
 
         </div>
     </main>
 
+    <script>
+        // Client-side Infinite Scroll Logic
+        let visibleCount = 5; // Start with 5 (one row on xl screens)
+        const batchSize = 5;
+
+        function setupInfiniteScroll() {
+            const items = document.querySelectorAll('.book-item');
+            const sentinel = document.getElementById('sentinel');
+            const spinner = document.getElementById('loading-spinner');
+
+            // Reset visibility
+            visibleCount = 5;
+
+            // Initial hide
+            updateVisibility(items);
+
+            // Setup Observer
+            if (window.bookObserver) window.bookObserver.disconnect();
+
+            window.bookObserver = new IntersectionObserver((entries) => {
+                if (entries[0].isIntersecting) {
+                    // Check if we have more to show
+                    if (visibleCount < items.length) {
+                        spinner.classList.remove('hidden');
+                        // Simulate small delay for effect or just show immediately
+                        setTimeout(() => {
+                            visibleCount += batchSize;
+                            updateVisibility(items);
+                            spinner.classList.add('hidden');
+                        }, 300);
+                    }
+                }
+            });
+
+            if (sentinel) window.bookObserver.observe(sentinel);
+        }
+
+        function updateVisibility(items) {
+            items.forEach((item, index) => {
+                if (index < visibleCount) {
+                    item.classList.remove('hidden');
+                } else {
+                    item.classList.add('hidden');
+                }
+            });
+        }
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', setupInfiniteScroll);
+    </script>
 </body>
 
 </html>

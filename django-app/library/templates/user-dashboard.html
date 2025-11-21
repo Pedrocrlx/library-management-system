@@ -73,6 +73,18 @@
     <main class="flex-grow pt-32 pb-20 px-6">
         <div class="max-w-5xl mx-auto">
 
+            <!-- Messages -->
+            {% if messages %}
+            <div class="mb-8 fade-in-up">
+                {% for message in messages %}
+                <div
+                    class="p-4 rounded-xl {% if message.tags == 'error' %}bg-red-500/10 border-red-500/20 text-red-400{% else %}bg-emerald-500/10 border-emerald-500/20 text-emerald-400{% endif %} border text-center font-medium">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
             <!-- Header & Stats -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12 fade-in-up">
                 <div class="md:col-span-3 mb-4">
