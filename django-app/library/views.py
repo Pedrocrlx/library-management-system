@@ -2,7 +2,11 @@ from django.shortcuts import redirect, render
 from django.contrib import messages
 from django.db.models import Q #coisa boa
 from django.contrib.auth.hashers import check_password
+<<<<<<< HEAD
 from .forms import UpdateBookForm, UserLoginForm, UserRegisterForm, AddBookForm
+=======
+from .forms import UserLoginForm, UserRegisterForm, AddBookForm, AddCategoryForm
+>>>>>>> c334ac0 (refator: admin add book categories field.)
 from .models import Books, Users, BooksBorrowed, Categories
 from datetime import datetime, timedelta
 
@@ -132,16 +136,14 @@ def user_dashboard(request):
     user_id = request.session.get("user_id")
     role = request.session.get("user_role")
 
-    # Bloquear não-logged ou admin
+
     if not user_id or role == "admin":
         return redirect("index")
 
     user = Users.objects.get(id=user_id)
 
-    # Livros que o usuário pegou
     borrowed_books = user.booksborrowed_set.select_related('book_id').all()
 
-    # Quantidade de livros já pegos
     borrowed_count = borrowed_books.count()
     max_books = 3
     remaining = max_books - borrowed_count
@@ -165,26 +167,24 @@ def borrow_book(request, book_id):
     user = Users.objects.get(id=user_id)
     book = Books.objects.get(id=book_id)
 
-    # Verificar stock
+
     if book.quantity <= 0:
         messages.error(request, "This book is out of stock.")
         return redirect("index")
 
-    # Verificar se já pegou o mesmo livro
+
     if BooksBorrowed.objects.filter(user_id=user, book_id=book).exists():
         messages.error(request, "You already borrowed this book.")
         return redirect("index")
 
-    # Limite máximo de livros
     max_books = 3
     borrowed_count = user.booksborrowed_set.count()
     if borrowed_count >= max_books:
         messages.error(request, f"You can only borrow up to {max_books} books at a time.")
         return redirect("index")
 
-    # Criar borrow com limite de 2 meses
     borrowed_date = datetime.now()
-    due_date = borrowed_date + timedelta(days=60)  # 2 meses aproximados
+    due_date = borrowed_date + timedelta(days=60)  
     BooksBorrowed.objects.create(
         user_id=user,
         book_id=book,
@@ -192,7 +192,6 @@ def borrow_book(request, book_id):
         due_date=due_date
     )
 
-    # Reduzir quantidade
     book.quantity -= 1
     book.save()
 
@@ -259,6 +258,18 @@ def admin_dashboard(request):
 # ------------------------------
 # ADMIN CRUD ADD/DELETE/UPDATE BOOKS
 # ------------------------------
+def add_category(request):
+    if request.method == 'POST':
+        form = AddCategoryForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "New category added successfully.")
+            return redirect('admin_manage')  
+        else:
+            messages.error(request, "Failed to add category.")
+    
+    return redirect('admin_manage')
+
 def admin_manage(request):
     role = request.session.get("user_role")
 
@@ -275,6 +286,7 @@ def admin_manage(request):
                 book_name=form.cleaned_data["title"],
                 author=form.cleaned_data["author"],
                 thumbnail=form.cleaned_data["thumbnail"],
+                category=form.cleaned_data["category"],
                 quantity=form.cleaned_data["quantity"]
             )
             messages.success(request, "Book added successfully!")
@@ -285,8 +297,10 @@ def admin_manage(request):
                     messages.error(request, f"{field}: {error}")
     else:
         form = AddBookForm()
+    
+    all_categories = Categories.objects.all()
 
-    return render(request, "admin-manage.html", {"form": form, "books": books})
+    return render(request, "admin-manage.html", {"form": form, "books": books, "all_categories": all_categories})
 
 
 def admin_delete_book(request, book_id):
