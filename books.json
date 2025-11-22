@@ -1,46 +1,371 @@
 {
   "categories": [
-    {"id": 1, "category_name": "Ficção"},
-    {"id": 2, "category_name": "Mistério"},
-    {"id": 3, "category_name": "Fantasia"},
-    {"id": 4, "category_name": "Romance"},
-    {"id": 5, "category_name": "História"},
-    {"id": 6, "category_name": "Ciência"},
-    {"id": 7, "category_name": "Tecnologia"},
-    {"id": 8, "category_name": "Terror"},
-    {"id": 9, "category_name": "Aventura"},
-    {"id": 10, "category_name": "Biografia"}
+    {
+      "id": 1,
+      "category_name": "Ficção"
+    },
+    {
+      "id": 2,
+      "category_name": "Mistério"
+    },
+    {
+      "id": 3,
+      "category_name": "Fantasia"
+    },
+    {
+      "id": 4,
+      "category_name": "Romance"
+    },
+    {
+      "id": 5,
+      "category_name": "História"
+    },
+    {
+      "id": 6,
+      "category_name": "Ciência"
+    },
+    {
+      "id": 7,
+      "category_name": "Tecnologia"
+    },
+    {
+      "id": 8,
+      "category_name": "Terror"
+    },
+    {
+      "id": 9,
+      "category_name": "Aventura"
+    },
+    {
+      "id": 10,
+      "category_name": "Biografia"
+    }
   ],
   "books": [
-    {"id": 1, "book_name": "O Código Da Vinci", "author": "Dan Brown", "categories": [1, 2], "quantity": 5, "thumbnail": "https://via.placeholder.com/150?text=Book+1"},
-    {"id": 2, "book_name": "1984", "author": "George Orwell", "categories": [1, 5], "quantity": 3, "thumbnail": "https://via.placeholder.com/150?text=Book+2"},
-    {"id": 3, "book_name": "O Senhor dos Anéis", "author": "J.R.R. Tolkien", "categories": [3, 9], "quantity": 4, "thumbnail": "https://via.placeholder.com/150?text=Book+3"},
-    {"id": 4, "book_name": "Harry Potter e a Pedra Filosofal", "author": "J.K. Rowling", "categories": [3, 9], "quantity": 6, "thumbnail": "https://via.placeholder.com/150?text=Book+4"},
-    {"id": 5, "book_name": "Orgulho e Preconceito", "author": "Jane Austen", "categories": [4], "quantity": 2, "thumbnail": "https://via.placeholder.com/150?text=Book+5"},
-    {"id": 6, "book_name": "A Revolução dos Bichos", "author": "George Orwell", "categories": [1, 5], "quantity": 3, "thumbnail": "https://via.placeholder.com/150?text=Book+6"},
-    {"id": 7, "book_name": "A Guerra dos Tronos", "author": "George R. R. Martin", "categories": [3, 9], "quantity": 5, "thumbnail": "https://via.placeholder.com/150?text=Book+7"},
-    {"id": 8, "book_name": "O Hobbit", "author": "J.R.R. Tolkien", "categories": [3, 9], "quantity": 4, "thumbnail": "https://via.placeholder.com/150?text=Book+8"},
-    {"id": 9, "book_name": "A Menina que Roubava Livros", "author": "Markus Zusak", "categories": [1, 5], "quantity": 3, "thumbnail": "https://via.placeholder.com/150?text=Book+9"},
-    {"id": 10, "book_name": "O Iluminado", "author": "Stephen King", "categories": [8, 2], "quantity": 2, "thumbnail": "https://via.placeholder.com/150?text=Book+10"},
-    {"id": 11, "book_name": "It: A Coisa", "author": "Stephen King", "categories": [8, 9], "quantity": 3, "thumbnail": "https://via.placeholder.com/150?text=Book+11"},
-    {"id": 12, "book_name": "Inferno", "author": "Dan Brown", "categories": [1, 2], "quantity": 4, "thumbnail": "https://via.placeholder.com/150?text=Book+12"},
-    {"id": 13, "book_name": "O Pequeno Príncipe", "author": "Antoine de Saint-Exupéry", "categories": [1, 9], "quantity": 5, "thumbnail": "https://via.placeholder.com/150?text=Book+13"},
-    {"id": 14, "book_name": "Dom Casmurro", "author": "Machado de Assis", "categories": [1, 4], "quantity": 3, "thumbnail": "https://via.placeholder.com/150?text=Book+14"},
-    {"id": 15, "book_name": "Memórias Póstumas de Brás Cubas", "author": "Machado de Assis", "categories": [1], "quantity": 2, "thumbnail": "https://via.placeholder.com/150?text=Book+15"},
-    {"id": 16, "book_name": "O Nome do Vento", "author": "Patrick Rothfuss", "categories": [3, 9], "quantity": 4, "thumbnail": "https://via.placeholder.com/150?text=Book+16"},
-    {"id": 17, "book_name": "O Conto da Aia", "author": "Margaret Atwood", "categories": [1, 4], "quantity": 3, "thumbnail": "https://via.placeholder.com/150?text=Book+17"},
-    {"id": 18, "book_name": "Sapiens: Uma Breve História da Humanidade", "author": "Yuval Noah Harari", "categories": [5, 6], "quantity": 5, "thumbnail": "https://via.placeholder.com/150?text=Book+18"},
-    {"id": 19, "book_name": "O Gene Egoísta", "author": "Richard Dawkins", "categories": [6], "quantity": 4, "thumbnail": "https://via.placeholder.com/150?text=Book+19"},
-    {"id": 20, "book_name": "Clean Code", "author": "Robert C. Martin", "categories": [7], "quantity": 3, "thumbnail": "https://via.placeholder.com/150?text=Book+20"},
-    {"id": 21, "book_name": "O Senhor das Moscas", "author": "William Golding", "categories": [1, 5], "quantity": 2, "thumbnail": "https://via.placeholder.com/150?text=Book+21"},
-    {"id": 22, "book_name": "Drácula", "author": "Bram Stoker", "categories": [8, 2], "quantity": 3, "thumbnail": "https://via.placeholder.com/150?text=Book+22"},
-    {"id": 23, "book_name": "Frankenstein", "author": "Mary Shelley", "categories": [8, 6], "quantity": 2, "thumbnail": "https://via.placeholder.com/150?text=Book+23"},
-    {"id": 24, "book_name": "A Máquina do Tempo", "author": "H.G. Wells", "categories": [1, 6], "quantity": 3, "thumbnail": "https://via.placeholder.com/150?text=Book+24"},
-    {"id": 25, "book_name": "O Apanhador no Campo de Centeio", "author": "J.D. Salinger", "categories": [1, 4], "quantity": 2, "thumbnail": "https://via.placeholder.com/150?text=Book+25"},
-    {"id": 26, "book_name": "O Alquimista", "author": "Paulo Coelho", "categories": [1, 9], "quantity": 3, "thumbnail": "https://via.placeholder.com/150?text=Book+26"},
-    {"id": 27, "book_name": "A Arte da Guerra", "author": "Sun Tzu", "categories": [5], "quantity": 4, "thumbnail": "https://via.placeholder.com/150?text=Book+27"},
-    {"id": 28, "book_name": "Steve Jobs", "author": "Walter Isaacson", "categories": [10], "quantity": 2, "thumbnail": "https://via.placeholder.com/150?text=Book+28"},
-    {"id": 29, "book_name": "Elon Musk", "author": "Ashlee Vance", "categories": [10, 7], "quantity": 2, "thumbnail": "https://via.placeholder.com/150?text=Book+29"},
-    {"id": 30, "book_name": "Duna", "author": "Frank Herbert", "categories": [3, 6, 9], "quantity": 4, "thumbnail": "https://via.placeholder.com/150?text=Book+30"}
+    {
+      "id": 1,
+      "book_name": "O Código Da Vinci",
+      "author": "Dan Brown",
+      "categories": [
+        1,
+        2
+      ],
+      "quantity": 5,
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/en/6/6b/DaVinciCode.jpg"
+    },
+    {
+      "id": 2,
+      "book_name": "1984",
+      "author": "George Orwell",
+      "categories": [
+        1,
+        5
+      ],
+      "quantity": 3,
+      "thumbnail": "https://img.bertrand.pt/images/1984-george-orwell/NDV8MjQ1NzU3Njd8MjA2ODY4MDB8MTYxMDYzNjYzNDAwMA==/500x"
+    },
+    {
+      "id": 3,
+      "book_name": "O Senhor dos Anéis",
+      "author": "J.R.R. Tolkien",
+      "categories": [
+        3,
+        9
+      ],
+      "quantity": 4,
+      "thumbnail": "https://m.media-amazon.com/images/I/81nV6x2ey4L._AC_UF1000,1000_QL80_.jpg"
+    },
+    {
+      "id": 4,
+      "book_name": "Harry Potter e a Pedra Filosofal",
+      "author": "J.K. Rowling",
+      "categories": [
+        3,
+        9
+      ],
+      "quantity": 6,
+      "thumbnail": "https://cdn.kobo.com/book-images/49d00979-e1f2-4918-8e21-ba3db2607380/1200/1200/False/harry-potter-and-the-philosopher-s-stone-3.jpg"
+    },
+    {
+      "id": 5,
+      "book_name": "Orgulho e Preconceito",
+      "author": "Jane Austen",
+      "categories": [
+        4
+      ],
+      "quantity": 2,
+      "thumbnail": "https://m.media-amazon.com/images/I/81Scutrtj4L._UF1000,1000_QL80_.jpg"
+    },
+    {
+      "id": 6,
+      "book_name": "A Revolução dos Bichos",
+      "author": "George Orwell",
+      "categories": [
+        1,
+        5
+      ],
+      "quantity": 3,
+      "thumbnail": "https://img.wook.pt/images/animal-farm-george-orwell/MXwxMjgzMTk4fDEyMDc5NTl8MTc0ODk4NzQ5NjAwMA==/500x"
+    },
+    {
+      "id": 7,
+      "book_name": "A Guerra dos Tronos",
+      "author": "George R. R. Martin",
+      "categories": [
+        3,
+        9
+      ],
+      "quantity": 5,
+      "thumbnail": "https://img.bertrand.pt/images/a-game-of-thrones-george-r-r-martin/NDV8MTEyMDE0NzZ8Njc3MjMxMHwxNTU1MDg2MzAxMDAw/500x"
+    },
+    {
+      "id": 8,
+      "book_name": "O Hobbit",
+      "author": "J.R.R. Tolkien",
+      "categories": [
+        3,
+        9
+      ],
+      "quantity": 4,
+      "thumbnail": "https://cdn.kobo.com/book-images/cf32789f-22db-4ad0-bba4-9c0bf69fb872/1200/1200/False/the-hobbit.jpg"
+    },
+    {
+      "id": 9,
+      "book_name": "A Menina que Roubava Livros",
+      "author": "Markus Zusak",
+      "categories": [
+        1,
+        5
+      ],
+      "quantity": 3,
+      "thumbnail": "https://m.media-amazon.com/images/I/914cHl9v7oL._AC_UF1000,1000_QL80_.jpg"
+    },
+    {
+      "id": 10,
+      "book_name": "O Iluminado",
+      "author": "Stephen King",
+      "categories": [
+        8,
+        2
+      ],
+      "quantity": 2,
+      "thumbnail": "https://cdn.kobo.com/book-images/f869dd07-5272-4687-a676-33bcc2983adc/353/569/90/False/the-shining-1.jpg"
+    },
+    {
+      "id": 11,
+      "book_name": "It: A Coisa",
+      "author": "Stephen King",
+      "categories": [
+        8,
+        9
+      ],
+      "quantity": 3,
+      "thumbnail": "https://img.bertrand.pt/images/a-coisa-livro-i-stephen-king/NTR8MjE0MDI4Mzd8MTcyNzY4MTd8MTUzNzUzNjk4NjAwMHx3ZWJw/300x"
+    },
+    {
+      "id": 12,
+      "book_name": "Inferno",
+      "author": "Dan Brown",
+      "categories": [
+        1,
+        2
+      ],
+      "quantity": 4,
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/pt/7/78/Inferno_livro.jpg"
+    },
+    {
+      "id": 13,
+      "book_name": "O Pequeno Príncipe",
+      "author": "Antoine de Saint-Exupéry",
+      "categories": [
+        1,
+        9
+      ],
+      "quantity": 5,
+      "thumbnail": "https://typebooks.ca/cdn/shop/files/BNCImageAPI_8dc7febc-4ab1-4081-8935-9606598f7836_2048x.jpg?v=1691751805"
+    },
+    {
+      "id": 14,
+      "book_name": "Dom Casmurro",
+      "author": "Machado de Assis",
+      "categories": [
+        1,
+        4
+      ],
+      "quantity": 3,
+      "thumbnail": "https://m.media-amazon.com/images/I/81M8TmhRYcL._UF1000,1000_QL80_.jpg"
+    },
+    {
+      "id": 15,
+      "book_name": "Memórias Póstumas de Brás Cubas",
+      "author": "Machado de Assis",
+      "categories": [
+        1
+      ],
+      "quantity": 2,
+      "thumbnail": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRGbLLpc0HFKI-Cvsu72gV7WwXM53KJRTl6Rg&s"
+    },
+    {
+      "id": 16,
+      "book_name": "O Nome do Vento",
+      "author": "Patrick Rothfuss",
+      "categories": [
+        3,
+        9
+      ],
+      "quantity": 4,
+      "thumbnail": "https://img.bertrand.pt/images/the-name-of-the-wind-patrick-rothfuss/NDV8ODExMzYyfDgzMTgwM3wxNzU0MzI1NzgwMDAw/500x"
+    },
+    {
+      "id": 17,
+      "book_name": "O Conto da Aia",
+      "author": "Margaret Atwood",
+      "categories": [
+        1,
+        4
+      ],
+      "quantity": 3,
+      "thumbnail": "https://cdn.kobo.com/book-images/0aa2a7c1-0f35-4d81-8d30-f276bd41ca4a/1200/1200/False/the-handmaid-s-tale-18.jpg"
+    },
+    {
+      "id": 18,
+      "book_name": "Sapiens: Uma Breve História da Humanidade",
+      "author": "Yuval Noah Harari",
+      "categories": [
+        5,
+        6
+      ],
+      "quantity": 5,
+      "thumbnail": "https://img.wook.pt/images/sapiens-yuval-noah-harari/MXwxNjEwNDQyM3wxMTY0OTc2M3wxNzAzMDIyOTMzMDAwfHdlYnA=/250x"
+    },
+    {
+      "id": 19,
+      "book_name": "O Gene Egoísta",
+      "author": "Richard Dawkins",
+      "categories": [
+        6
+      ],
+      "quantity": 4,
+      "thumbnail": "https://cdn.kobo.com/book-images/5612c62e-4829-4762-b060-8191f634299f/1200/1200/False/the-selfish-gene-1.jpg"
+    },
+    {
+      "id": 20,
+      "book_name": "Clean Code",
+      "author": "Robert C. Martin",
+      "categories": [
+        7
+      ],
+      "quantity": 3,
+      "thumbnail": "https://img.bertrand.pt/images/clean-code-robert-martin/NDV8MTM4MzE5MnwxMzA3NzY4fDE3NTI1MTIyNjgwMDA=/500x"
+    },
+    {
+      "id": 21,
+      "book_name": "O Senhor das Moscas",
+      "author": "William Golding",
+      "categories": [
+        1,
+        5
+      ],
+      "quantity": 2,
+      "thumbnail": "https://img.bertrand.pt/images/lord-of-the-flies-william-golding/NDV8MTA4ODg5NDN8NjQ1ODU4MHwxNzQ4OTg4OTI1MDAw/500x"
+    },
+    {
+      "id": 22,
+      "book_name": "Drácula",
+      "author": "Bram Stoker",
+      "categories": [
+        8,
+        2
+      ],
+      "quantity": 3,
+      "thumbnail": "https://cdn.kobo.com/book-images/ddb65d1c-33fc-4e6d-b1c7-116410687a35/1200/1200/False/dracula-340.jpg"
+    },
+    {
+      "id": 23,
+      "book_name": "Frankenstein",
+      "author": "Mary Shelley",
+      "categories": [
+        8,
+        6
+      ],
+      "quantity": 2,
+      "thumbnail": "https://img.wook.pt/images/frankenstein-mary-shelley/MXwxNjQwOTk4OHwxMTk5NjM5OHwxNDI5Nzc3NzUxMDAw/500x"
+    },
+    {
+      "id": 24,
+      "book_name": "A Máquina do Tempo",
+      "author": "H.G. Wells",
+      "categories": [
+        1,
+        6
+      ],
+      "quantity": 3,
+      "thumbnail": "https://cdn.kobo.com/book-images/97d6afef-b8bb-4100-947d-7fd4868cce3f/1200/1200/False/the-time-machine-274.jpg"
+    },
+    {
+      "id": 25,
+      "book_name": "O Apanhador no Campo de Centeio",
+      "author": "J.D. Salinger",
+      "categories": [
+        1,
+        4
+      ],
+      "quantity": 2,
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/pt/5/5d/Capa_The_Catcher_in_the_Rye.jpg"
+    },
+    {
+      "id": 26,
+      "book_name": "O Alquimista",
+      "author": "Paulo Coelho",
+      "categories": [
+        1,
+        9
+      ],
+      "quantity": 3,
+      "thumbnail": "https://static.fnac-static.com/multimedia/PT/images_produits/PT/ZoomPE/8/6/6/9780007155668/tsp20100824202224/The-Alchemist.jpg"
+    },
+    {
+      "id": 27,
+      "book_name": "A Arte da Guerra",
+      "author": "Sun Tzu",
+      "categories": [
+        5
+      ],
+      "quantity": 4,
+      "thumbnail": "https://img.wook.pt/images/the-art-of-war-sun-tzu/MXwxMzY4ODgzMHw5MjYyNzQ4fDE3NTUwMTg2MDYwMDA=/500x"
+    },
+    {
+      "id": 28,
+      "book_name": "Steve Jobs",
+      "author": "Walter Isaacson",
+      "categories": [
+        10
+      ],
+      "quantity": 2,
+      "thumbnail": "https://prodimage.images-bn.com/pimages/9783641074623_p0_v3_s600x595.jpg"
+    },
+    {
+      "id": 29,
+      "book_name": "Elon Musk",
+      "author": "Ashlee Vance",
+      "categories": [
+        10,
+        7
+      ],
+      "quantity": 2,
+      "thumbnail": "https://img.wook.pt/images/elon-musk-ashlee-vance/MXwxNzMzNjE2N3wxMjk2MzIxNXwxNjcyMzkxNTM0MDAwfHdlYnA=/250x"
+    },
+    {
+      "id": 30,
+      "book_name": "Duna",
+      "author": "Frank Herbert",
+      "categories": [
+        3,
+        6,
+        9
+      ],
+      "quantity": 4,
+      "thumbnail": "https://m.media-amazon.com/images/I/81GgpMj8ImL._AC_UF1000,1000_QL80_.jpg"
+    }
   ]
 }

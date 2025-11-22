@@ -17,15 +17,17 @@ def user_register(request):
         if form.is_valid():
             # Check email exists
             if Users.objects.filter(email=form.cleaned_data['email']).exists():
-                messages.error(request, "Email already registered.")
+                return render(request, 'user-register.html', {'form': form, 'error': "Email already registered."})
             else:
                 user = form.save()  
                 messages.success(request, f"Registration successful! Welcome, {user.name}.")
                 return redirect('auth_login')
         else:
+            error_msg = ""
             for field, errors in form.errors.items():
                 for error in errors:
-                    messages.error(request, f"{field}: {error}")
+                    error_msg += f"{field}: {error} "
+            return render(request, 'user-register.html', {'form': form, 'error': error_msg})
     else:
         form = UserRegisterForm()
 
@@ -48,8 +50,7 @@ def user_login(request):
             try:
                 user = Users.objects.get(name=name)
             except Users.DoesNotExist:
-                messages.error(request, "User not found.")
-                return render(request, "user-login.html", {"form": form})
+                return render(request, "user-login.html", {"form": form, "error": "User not found."})
 
 
             if check_password(password, user.password):
@@ -65,7 +66,7 @@ def user_login(request):
                     return redirect("index")
 
             else:
-                messages.error(request, "Incorrect password.")
+                return render(request, "user-login.html", {"form": form, "error": "Incorrect password."})
 
     else:
         form = UserLoginForm()
@@ -80,16 +81,18 @@ def index(request):
     user_role = request.session.get("user_role")
     query = request.GET.get("q", "").strip()
 
-    # Get books with quantity > 0
-    books_qs = Books.objects.filter(quantity__gt=0).prefetch_related('categoriesperbook_set__category_id')
+    # Get all books
+    books_qs = Books.objects.all().prefetch_related('categoriesperbook_set__category_id')
 
     # Search filter
     if query:
-        books_qs = books_qs.filter(
-            Q(book_name__icontains=query) | 
-            Q(author__icontains=query) |
-            Q(categoriesperbook__category_id__category_name__icontains=query)
-        ).distinct()
+        terms = query.split()
+        for term in terms:
+            books_qs = books_qs.filter(
+                Q(book_name__icontains=term) | 
+                Q(author__icontains=term) |
+                Q(categoriesperbook__category_id__category_name__icontains=term)
+            ).distinct()
 
     # Prepare data for template
     books = []
@@ -106,11 +109,20 @@ def index(request):
     # Fetch all categories for the filter
     all_categories = Categories.objects.all()
 
+    # Fetch borrowed books for preview if user is logged in
+    borrowed_books = []
+    reached_limit = False
+    if user_id:
+        borrowed_books = BooksBorrowed.objects.filter(user_id=user_id).select_related('book_id')
+        reached_limit = borrowed_books.count() >= 3
+
     return render(request, "index.html", {
         "books": books, 
         "user_id": user_id, 
         "user_role": user_role,
-        "all_categories": all_categories
+        "all_categories": all_categories,
+        "borrowed_books": borrowed_books,
+        "reached_limit": reached_limit
     })
 
 # ------------------------------
@@ -221,15 +233,27 @@ def admin_dashboard(request):
     if role != "admin":
         return redirect("index")  # Block non-admins
 
-    # Fetch all books for management
+    # Fetch all books for management (needed for stats)
     books = Books.objects.all()
-
-    # Optional: fetch all borrowed books for overview
+    
+    # Calculate stats
+    total_titles = books.count()
+    total_books_count = sum(book.quantity for book in books)
+    
+    # Fetch all borrowed books
     borrowed_books = BooksBorrowed.objects.select_related("user_id", "book_id").all()
+    borrowed_count = borrowed_books.count()
+    
+    # Total holdings = Available + Borrowed
+    total_holdings = total_books_count + borrowed_count
 
     return render(request, "admin-dashboard.html", {
         "books": books,
-        "borrowed_books": borrowed_books
+        "borrowed_books": borrowed_books,
+        "total_titles": total_titles,
+        "total_books_count": total_books_count,
+        "borrowed_count": borrowed_count,
+        "total_holdings": total_holdings
     })
 
 # ------------------------------
@@ -308,6 +332,7 @@ def update_book(request, book_id):
             for field, errors in form.errors.items():
                 for error in errors:
                     messages.error(request, f"{field}: {error}")
+            return redirect("admin_manage")
     else:
         form = UpdateBookForm(initial={
             "title": book.book_name,
