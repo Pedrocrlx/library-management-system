@@ -203,6 +203,25 @@
                     class="w-full px-4 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500/50 focus:border-violet-500 transition-all"
                     placeholder="https://..." required />
                 </div>
+                <div id="categories-container">
+                  <div>
+                    <label for="id_category" class="block text-sm font-medium text-slate-300 mb-1.5">Category 1</label>
+                      <select name="category_1" id="id_category" class="w-full px-4 py-2.5 rounded-xl bg-slate-900/50 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500/50 focus:border-violet-500 transition-all">
+                        <option value="" disabled selected>Select a Category</option>
+                          {% for category in all_categories %}
+                            <option value="{{ category.id }}" 
+                              {% if request.GET.q == category.category_name %} selected {% endif %}>
+                              {{ category.category_name }}
+                            </option>
+                          {% endfor %}
+                      </select>
+                  </div>
+                </div>
+                <div class="mt-3">
+                  <button type="button" id="add-category-btn" class="w-full py-3 bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-500 hover:to-fuchsia-500 text-white font-bold rounded-xl shadow-lg shadow-violet-500/25 transition-all hover:-translate-y-0.5 mt-2">
+                    + Add Another Category
+                  </button>
+                </div>
                 <div>
                   <label for="id_quantity" class="block text-sm font-medium text-slate-300 mb-1.5">Quantity</label>
                   <input type="number" name="quantity" id="id_quantity" min="1"
@@ -358,6 +377,31 @@
       });
     });
   }
+
+
+
+
+  // Add Category Functionality
+   let categoryCount = 1; 
+        document.getElementById('add-category-btn').addEventListener('click', function() {
+
+        const clonedSelect = document.getElementById('id_category').cloneNode(true);
+
+        clonedSelect.id = `id_category_${categoryCount + 1}`;
+        clonedSelect.name = `category_${categoryCount + 1}`;
+
+        categoryCount++;
+
+  
+        const newLabel = document.createElement('label');
+        newLabel.setAttribute('for', clonedSelect.id);
+        newLabel.classList.add('block', 'text-sm', 'font-medium', 'text-slate-300', 'mb-1.5', 'pt-3');
+        newLabel.textContent = `Category ${categoryCount}`;
+
+        const container = document.getElementById('categories-container');
+        container.appendChild(newLabel); 
+        container.appendChild(clonedSelect); 
+        });
 </script>
 </body>
 
@@ -404,5 +448,5 @@
     </div>
   </div>
 </div>
-
 </html>
+

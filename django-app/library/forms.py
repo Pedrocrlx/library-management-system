@@ -1,5 +1,5 @@
 from django import forms
-from .models import Users
+from .models import Users, Categories
 
 
 class UserLoginForm(forms.Form):
@@ -47,3 +47,9 @@ class UpdateBookForm(forms.Form):
     author = forms.CharField(label="Author", max_length=100, required=True)
     thumbnail = forms.URLField(label="Thumbnail URL", max_length=200)
     quantity = forms.IntegerField(label="Quantity", min_value=1)
+    
+    
+class AddCategoryForm(forms.ModelForm):
+    class Meta:
+        model = Categories
+        fields = ['category_name']
