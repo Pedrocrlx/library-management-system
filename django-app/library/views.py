@@ -3,7 +3,7 @@ from django.contrib import messages
 from django.db.models import Q #coisa boa
 from django.contrib.auth.hashers import check_password
 from .forms import UserLoginForm, UserRegisterForm, AddBookForm, AddCategoryForm, UpdateBookForm
-from .models import Books, Users, BooksBorrowed, Categories
+from .models import Books, Users, BooksBorrowed, Categories, CategoriesPerBook
 from datetime import datetime, timedelta
 
 
@@ -270,33 +270,55 @@ def admin_manage(request):
     role = request.session.get("user_role")
 
     if role != "admin":
-        return redirect("index")  # Block non-admins
+        return redirect("index")
 
     books = Books.objects.all()
 
     if request.method == "POST":
         form = AddBookForm(request.POST)
+        form_category = AddCategoryForm(request.POST)
+
 
         if form.is_valid():
-            Books.objects.create(
+            book = Books.objects.create(
                 book_name=form.cleaned_data["title"],
                 author=form.cleaned_data["author"],
                 thumbnail=form.cleaned_data["thumbnail"],
-                category=form.cleaned_data["category"],
                 quantity=form.cleaned_data["quantity"]
             )
+
+            category_fields = [key for key in request.POST.keys() if "category_" in key]
+            for field in category_fields:
+                category_id = request.POST.get(field)
+                if category_id:
+                    CategoriesPerBook.objects.create(
+                        book_id=book,
+                        category_id=Categories.objects.get(id=category_id)
+                    )
+
             messages.success(request, "Book added successfully!")
             return redirect("admin_manage")
-        else:
-            for field, errors in form.errors.items():
-                for error in errors:
-                    messages.error(request, f"{field}: {error}")
+        
+        if form_category.is_valid() and request.POST.get("book_id"):
+            CategoriesPerBook.objects.create(
+                book_id=Books.objects.get(id=request.POST.get("book_id")),
+                category_id=form_category.cleaned_data["category_id"]
+            )
+            messages.success(request, "Category assigned to book successfully!")
+            return redirect("admin_manage")
+
     else:
         form = AddBookForm()
-    
+        form_category = AddCategoryForm() 
+
     all_categories = Categories.objects.all()
 
-    return render(request, "admin-manage.html", {"form": form, "books": books, "all_categories": all_categories})
+    return render(request, "admin-manage.html", {
+        "form": form,
+        "form_category": form_category,
+        "books": books,
+        "all_categories": all_categories
+    })
 
 
 def admin_delete_book(request, book_id):
