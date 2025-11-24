@@ -29,12 +29,29 @@ class PasswordValidationMixin:
         return pwd
 
 class UserRegisterForm(PasswordValidationMixin, forms.ModelForm):
+    confirm_password = forms.CharField(
+        widget=forms.PasswordInput(),
+        required=True,
+        label="Confirm Password"
+    )
+
     class Meta:
         model = Users
-        fields = ['name', 'password', 'email']
+        fields = ['name', 'email', 'password']
         widgets = {
             'password': forms.PasswordInput(),
         }
+
+    def clean(self):
+        cleaned_data = super().clean()
+        password = cleaned_data.get("password")
+        confirm = cleaned_data.get("confirm_password")
+
+        if password and confirm and password != confirm:
+            raise forms.ValidationError("Passwords do not match.")
+
+        return cleaned_data
+    
 
 class AddBookForm(forms.Form):
     title = forms.CharField(label="Title", max_length=100, required=True)

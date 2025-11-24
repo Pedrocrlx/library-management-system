@@ -311,10 +311,11 @@
                 Limit Reached
               </button>
               {% else %}
-              <a href="{% url 'borrow_book' book.id %}"
-                class="block w-full py-3 rounded-xl bg-white text-slate-950 font-bold text-center hover:bg-violet-400 transition-colors shadow-lg shadow-white/5">
-                Borrow Book
-              </a>
+              <button
+              onclick="openBorrowModal('{{ book.id }}', '{{ book.title|escapejs }}')"
+              class="block w-full py-3 rounded-xl bg-white text-slate-950 font-bold text-center hover:bg-violet-400 transition-colors shadow-lg shadow-white/5">
+              Borrow Book
+              </button>
               {% endif %}
               {% else %}
               <button disabled
@@ -455,7 +456,69 @@
           });
       }, 300);
     });
+
+
+   
+    function openBorrowModal(id, title) {
+        const modal = document.getElementById('borrow-modal');
+        const form = document.getElementById('borrow-form');
+        const bookTitle = document.getElementById('borrow-book-title');
+
+        form.action = `/borrow/${id}/`;
+        bookTitle.textContent = title;
+
+        modal.classList.remove('hidden');
+    }
+
+    function closeBorrowModal() {
+        document.getElementById('borrow-modal').classList.add('hidden');
+    }
+    
+
   </script>
 </body>
+
+<!-- Borrow Confirmation Modal -->
+<div id="borrow-modal" class="fixed inset-0 z-50 hidden">
+    <!-- Backdrop -->
+    <div class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm" onclick="closeBorrowModal()"></div>
+
+    <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
+        <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+
+            <div class="relative transform overflow-hidden rounded-2xl bg-slate-900 border border-slate-700 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-md">
+                <div class="px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+                    <div class="sm:flex sm:items-start">
+                        <div class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-violet-500/10 sm:mx-0 sm:h-10 sm:w-10">
+                            📚
+                        </div>
+                        <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
+                            <h3 class="text-base font-semibold leading-6 text-white">Borrow Book</h3>
+                            <div class="mt-2">
+                                <p class="text-sm text-slate-400">
+                                    Are you sure you want to borrow "<span id="borrow-book-title" class="text-white font-medium"></span>"?
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-slate-800/50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+                    <form id="borrow-form" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="inline-flex w-full justify-center rounded-xl bg-violet-600 px-3 py-2 text-sm font-semibold text-white hover:bg-violet-500 sm:ml-3 sm:w-auto">
+                            Confirm Borrow
+                        </button>
+                    </form>
+
+                    <button onclick="closeBorrowModal()" class="mt-3 inline-flex w-full justify-center rounded-xl bg-slate-800 px-3 py-2 text-sm font-semibold text-slate-300 ring-1 ring-slate-700 hover:bg-slate-700 sm:mt-0 sm:w-auto">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
 
 </html>
