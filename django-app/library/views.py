@@ -5,6 +5,7 @@ from django.contrib.auth.hashers import check_password
 from .forms import UserLoginForm, UserRegisterForm, AddBookForm, AddCategoryForm, UpdateBookForm
 from .models import Books, Users, BooksBorrowed, Categories, CategoriesPerBook
 from datetime import datetime, timedelta
+from django.utils import timezone
 
 
 # ------------------------------
@@ -179,7 +180,7 @@ def borrow_book(request, book_id):
         messages.error(request, f"You can only borrow up to {max_books} books at a time.")
         return redirect("index")
 
-    borrowed_date = datetime.now()
+    borrowed_date = timezone.now()
     due_date = borrowed_date + timedelta(days=60)  
     BooksBorrowed.objects.create(
         user_id=user,

@@ -1,95 +1,134 @@
-# library-management-system
+# Library Management System
 
-### 1. Install the vscode extension.
-    - Dev Containers
+A comprehensive web-based application for managing library operations, including book inventory, user management, and borrowing processes. This project focuses on robust database design and efficient data handling.
 
----
+## Project Overview
 
-### 2. Make sure that you are inside of devcontainer.
+This Library Management System is built with Django and PostgreSQL, designed to streamline the operations of a modern library. It provides distinct interfaces for administrators (librarians) and standard users, ensuring secure and efficient access to library resources.
 
-If you getting errors, or cant connect to devcontainer then run:
+## Database Design
 
+The core of this project is its relational database schema, designed to ensure data integrity and efficient querying.
+
+### ER Diagram Description
+
+The database consists of the following key entities and relationships:
+
+*   **Users**: Stores user information including authentication credentials and roles (admin/user).
+*   **Books**: Manages the inventory of books, including details like title, author, quantity, and thumbnail.
+*   **Categories**: Defines the various genres or categories of books.
+*   **BooksBorrowed**: A junction table recording borrowing transactions. It links `Users` and `Books`, tracking who borrowed what, when, and the due date.
+*   **CategoriesPerBook**: A junction table implementing a Many-to-Many relationship between `Books` and `Categories`, allowing a book to belong to multiple categories.
+
+### Schema Details
+
+#### 1. Users Table
+| Field | Type | Constraints | Description |
+| :--- | :--- | :--- | :--- |
+| `id` | Integer | Primary Key | Unique identifier for the user |
+| `name` | Varchar(100) | Not Null | Full name of the user |
+| `email` | EmailField | Unique, Not Null | User's email address (used for login) |
+| `password` | Varchar(100) | Not Null | Hashed password |
+| `role` | Varchar(10) | Default='user' | Role of the user ('admin' or 'user') |
+
+#### 2. Books Table
+| Field | Type | Constraints | Description |
+| :--- | :--- | :--- | :--- |
+| `id` | Integer | Primary Key | Unique identifier for the book |
+| `book_name` | Varchar(100) | Not Null | Title of the book |
+| `author` | Varchar(100) | Not Null | Author of the book |
+| `thumbnail` | URLField | Nullable | URL to the book cover image |
+| `quantity` | Integer | Default=1 | Number of copies available |
+
+#### 3. BooksBorrowed Table
+| Field | Type | Constraints | Description |
+| :--- | :--- | :--- | :--- |
+| `id` | Integer | Primary Key | Unique identifier for the transaction |
+| `user_id` | ForeignKey | References Users(id) | The user who borrowed the book |
+| `book_id` | ForeignKey | References Books(id) | The book being borrowed |
+| `borrowed_date` | Date | Auto Now Add | Date when the book was borrowed |
+| `due_date` | DateTime | Default (+60 days) | Date when the book is due |
+
+#### 4. Categories Table
+| Field | Type | Constraints | Description |
+| :--- | :--- | :--- | :--- |
+| `id` | Integer | Primary Key | Unique identifier for the category |
+| `category_name` | Varchar(100) | Not Null | Name of the category (e.g., Fiction, Science) |
+
+#### 5. CategoriesPerBook Table
+| Field | Type | Constraints | Description |
+| :--- | :--- | :--- | :--- |
+| `id` | Integer | Primary Key | Unique identifier |
+| `book_id` | ForeignKey | References Books(id) | The book |
+| `category_id` | ForeignKey | References Categories(id) | The category |
+
+## Features
+
+### User Features
+*   **Browse & Search**: View all available books and search by title or author.
+*   **Authentication**: Secure registration and login system.
+*   **Borrowing**: Borrow available books (limit: 3 books per user).
+*   **Dashboard**: View borrowed books and return them.
+*   **Validation**: Cannot borrow out-of-stock books or duplicate copies.
+
+### Admin Features
+*   **Dashboard**: Overview of total books, borrowed books, and inventory stats.
+*   **Inventory Management**: Add, update, and delete books.
+*   **Category Management**: Add new categories and assign them to books.
+*   **User Oversight**: View borrowing status of all books.
+
+## Technologies Used
+
+*   **Backend**: Django 5.2 (Python 3.12)
+*   **Database**: PostgreSQL 17
+*   **Containerization**: Docker & Docker Compose
+*   **Dependency Management**: Poetry
+*   **Testing**: Pytest & Pytest-Django
+
+## Setup & Installation
+
+### Prerequisites
+*   Docker & Docker Compose
+*   Make (optional, for easy commands)
+
+### Running the Project
+
+1.  **Clone the repository**
+    ```bash
+    git clone <repository-url>
+    cd library-management-system
+    ```
+
+2.  **Start the application**
+    Use the `make` command to build and start the containers, run migrations, and load initial data.
+    ```bash
+    make run
+    ```
+    *   Access the app at: `http://localhost:8000`
+    *   Access Adminer (DB GUI) at: `http://localhost:8080`
+
+3.  **Stop the application**
+    ```bash
+    make down
+    ```
+
+4.  **Clean up (Remove volumes & containers)**
+    ```bash
+    make clean
+    ```
+
+## 🧪 Testing
+
+The project includes a comprehensive integration test suite using `pytest`.
+
+To run the tests inside the Docker container:
 ```bash
-make clean
+make test
 ```
 
-Should resolve cache/volumes problems.
-
----
-
-### 3. Install the dependencies
-
-```bash
-    poetry install --no-root
-```
-
-if you get permissions errors after run this command:
-
-```bash
-sudo chown -R $USER /library-management-system/.venv/
-```
-
----
-### 4. Check the enviroment that you are.
-
-Should look like the example below:
-
-```bash 
-(library-management-system-py3.12) vscode ➜ /workspaces/library-management-system (feat/django-setup)
-```
-
-If not, run:
- ```bash
-poetry env activate
-```
-
-Will be displayed something like this on terminal:
-
-```bash
-/workspaces/library-management-system/.venv/bin/activate
-```
-
-Then you copy this path, click on bottom right button to change your enviroment.
-
-Select ```Enter interpreter path```
-
-Then paste the path there. 
-
-Kill/close the terminal and open a new one.
-
----
-
-#### 5. Make sure that you create your branch from dev
-
-- Check your branches using: 
-
-```bash
-git branch
-```
-If you just clone the project must have just **main** branch.
-
-```bash
-*main
-```
-
-So, if you just have the **main** you need to pull the **dev branch** from remote:
-
-```bash
-git branch pull origin dev
-```
-
-```bash
-git switch dev
-```
-
-After this you can create your **feature** branch **from dev**.
-
-Example: 
-
-```bash
-git switch -c feature/list-books
-```
-
-### How to run the project ?
-
-- make run
+### Test Coverage
+*   Public access & Search
+*   Authentication flows (Login/Register/Logout)
+*   Borrowing logic & limits
+*   Admin CRUD operations
+*   Permission & Security checks
