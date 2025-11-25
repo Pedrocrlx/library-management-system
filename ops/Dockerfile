@@ -9,7 +9,7 @@ COPY .env /app/
 COPY pyproject.toml poetry.lock /app/
 
 RUN poetry config virtualenvs.create true &&\
-    poetry config virtualenvs.in-project true &&\
+    poetry config virtualenvs.in-project false &&\
     poetry install --no-root
 
 COPY . .

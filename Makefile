@@ -61,3 +61,8 @@ createadmin:
 compose.load-books: ## Load books into the running Docker Django container
 	@echo "📚 Loading books inside Docker container..."
 	docker compose run --rm app poetry run python django-app/manage.py load_books_data ./books.json
+
+test: ## Run tests inside Docker container
+	@echo "Running tests inside Docker container..."
+	docker compose run --rm -w /app/django-app app poetry run pytest --verbose
+	

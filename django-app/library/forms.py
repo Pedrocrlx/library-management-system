@@ -56,13 +56,13 @@ class UserRegisterForm(PasswordValidationMixin, forms.ModelForm):
 class AddBookForm(forms.Form):
     title = forms.CharField(label="Title", max_length=100, required=True)
     author = forms.CharField(label="Author", max_length=100, required=True)
-    thumbnail = forms.URLField(label="Thumbnail URL", max_length=200)
+    thumbnail = forms.URLField(label="Thumbnail URL", max_length=200, assume_scheme='https')
     quantity = forms.IntegerField(label="Quantity", min_value=1)
 
 class UpdateBookForm(forms.Form):
     title = forms.CharField(label="Title", max_length=100, required=True)
     author = forms.CharField(label="Author", max_length=100, required=True)
-    thumbnail = forms.URLField(label="Thumbnail URL", max_length=200)
+    thumbnail = forms.URLField(label="Thumbnail URL", max_length=200, assume_scheme='https')
     quantity = forms.IntegerField(label="Quantity", min_value=1)
     
     
