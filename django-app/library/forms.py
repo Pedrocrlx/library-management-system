@@ -7,6 +7,11 @@ class UserLoginForm(forms.Form):
     password = forms.CharField(label="Password", widget=forms.PasswordInput)
 
 
+class EmailValidationMixin:
+    def clean_email(self):
+        validate_email = self.cleaned_data.get('email')
+        return validate_email.lower()
+
 class PasswordValidationMixin:
     """Mixin to add custom password validation to any form"""
 
@@ -28,7 +33,7 @@ class PasswordValidationMixin:
                 "Password must contain at least one uppercase letter.")
         return pwd
 
-class UserRegisterForm(PasswordValidationMixin, forms.ModelForm):
+class UserRegisterForm(PasswordValidationMixin, EmailValidationMixin, forms.ModelForm):
     confirm_password = forms.CharField(
         widget=forms.PasswordInput(),
         required=True,

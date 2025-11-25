@@ -20,7 +20,7 @@ The database consists of the following key entities and relationships:
 *   **BooksBorrowed**: A junction table recording borrowing transactions. It links `Users` and `Books`, tracking who borrowed what, when, and the due date.
 *   **CategoriesPerBook**: A junction table implementing a Many-to-Many relationship between `Books` and `Categories`, allowing a book to belong to multiple categories.
 
-### Schema Details
+### Schema Details  
 
 #### 1. Users Table
 | Field | Type | Constraints | Description |
