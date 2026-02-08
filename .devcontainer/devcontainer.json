@@ -2,8 +2,10 @@
 // README at: https://github.com/devcontainers/templates/tree/main/src/python
 {
 	"name": "Python 3",
-	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
-	"image": "mcr.microsoft.com/devcontainers/python:2-3.12-bullseye",
+	"build": {
+		"dockerfile": "Dockerfile",
+		"context": "."
+	},
 	"features": {
 		"ghcr.io/devcontainers-extra/features/poetry:2": {
 			"version": "latest"
@@ -20,7 +22,8 @@
 
 	// Set environment variables
 	"remoteEnv": {
-		"LOCAL_WORKSPACE_FOLDER": "${localWorkspaceFolder}",
-		"POETRY_VIRTUALENVS_IN_PROJECT":"true"
-	}
+        "LOCAL_WORKSPACE_FOLDER": "${localWorkspaceFolder}",
+        "POETRY_VIRTUALENVS_IN_PROJECT": "true",
+        "PATH": "${workspaceFolder}/.venv/bin:${env:PATH}"
+    },
 }
